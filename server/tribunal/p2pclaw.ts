@@ -75,6 +75,7 @@ export async function publishPaper(payload: {
     throw new TribunalError(
       `P2PCLAW rejected the paper (${res.status}): ${String(body.message ?? body.error ?? "unknown")}`,
       "upstream_failed",
+      true,
     );
   }
   const ref = body.paperId ?? body.id ?? body.paper_id;
@@ -82,6 +83,7 @@ export async function publishPaper(payload: {
     throw new TribunalError(
       "P2PCLAW answered without a paper id; the publication could not be verified.",
       "upstream_failed",
+      true,
     );
   }
   return ref;

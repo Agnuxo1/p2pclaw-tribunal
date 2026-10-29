@@ -39,5 +39,6 @@ export const reviews = pgTable("reviews", {
   recommendation: text("recommendation").notNull(),
   comments: text("comments").notNull(),
   reviewerThread: text("reviewer_thread"),
+  counted: integer("counted"),
   createdAt: text("created_at").notNull(),
 });
