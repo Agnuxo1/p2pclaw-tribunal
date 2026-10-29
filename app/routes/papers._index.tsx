@@ -3,9 +3,9 @@ import { useActionQuery } from "@agent-native/core/client/hooks";
 import { useState } from "react";
 import { Link } from "react-router";
 
+import { StatusBadge } from "@/components/papers/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { StatusBadge } from "@/components/papers/StatusBadge";
 import { APP_TITLE } from "@/lib/app-config";
 
 export function meta() {
@@ -33,11 +33,14 @@ export default function PapersRoute() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8">
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Research papers</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Research papers
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          A researcher agent drafts, three independent reviewer agents score it, and a
-          deterministic tribunal decides: accept, revise or reject. Accepted papers can be
-          published to the P2PCLAW network after your approval.
+          A researcher agent drafts, three independent reviewer agents score it,
+          and a deterministic tribunal decides: accept, revise or reject.
+          Accepted papers can be published to the P2PCLAW network after your
+          approval.
         </p>
       </header>
 
@@ -74,7 +77,9 @@ export default function PapersRoute() {
                 to={`/papers/${p.id}`}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50"
               >
-                <span className="min-w-0 flex-1 truncate text-sm">{p.question}</span>
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  {p.question}
+                </span>
                 <span className="text-xs text-muted-foreground">
                   {p.mode} · v{p.currentVersion}
                 </span>

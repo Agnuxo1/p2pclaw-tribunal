@@ -355,6 +355,29 @@ export async function finishPublication(
   return status;
 }
 
+const STALE_CLAIM_MS = 10 * 60 * 1000;
+
+/**
+ * A "publishing" claim older than 10 minutes means the process died mid-publish.
+ * The POST may have gone through, so the paper becomes "publish_unverified"
+ * (never back to "accepted", which would allow a second POST).
+ */
+export async function expireStaleClaim(id: string, updatedAt: string) {
+  if (Date.now() - Date.parse(updatedAt) < STALE_CLAIM_MS) return false;
+  const expired = await getDb()
+    .update(papers)
+    .set({ status: "publish_unverified", updatedAt: now() })
+    .where(
+      and(
+        eq(papers.id, id),
+        eq(papers.status, "publishing"),
+        eq(papers.updatedAt, updatedAt),
+      ),
+    )
+    .returning({ id: papers.id });
+  return expired.length === 1;
+}
+
 /** Re-checks an unverified publication by reading it back; never POSTs again. */
 export async function reverifyPublication(id: string, verified: boolean) {
   if (!verified) return "publish_unverified";
