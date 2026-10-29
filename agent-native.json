@@ -4,6 +4,10 @@
     "firstRun": "off"
   },
   "doctor": {
-    "failOnBuild": false
+    "failOnBuild": false,
+    "dbToolScopingDenylist": {
+      "paper_versions": "child rows of papers; read and written only through actions that check paper ownership",
+      "reviews": "child rows of papers; read and written only through actions that check paper ownership and reviewer independence"
+    }
   }
 }
