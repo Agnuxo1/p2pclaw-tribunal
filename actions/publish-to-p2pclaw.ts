@@ -10,6 +10,7 @@ import {
 import { confirmPublished, publishPaper } from "../server/tribunal/p2pclaw.js";
 import {
   claimPublication,
+  expireStaleClaim,
   finishPublication,
   loadPaper,
   requireUserEmail,
@@ -58,6 +59,15 @@ export default defineAction({
     guarded(async () => {
       const email = requireUserEmail(ctx?.userEmail);
       const { paper, versions, tribunal } = await loadPaper(email, paperId);
+      if (
+        paper.status === "publishing" &&
+        (await expireStaleClaim(paperId, paper.updatedAt))
+      ) {
+        throw new TribunalError(
+          "An earlier publish was interrupted; it may have reached P2PCLAW. Marked as unverified: check the network before publishing again.",
+          "conflict",
+        );
+      }
       // An earlier publish that could not be read back is re-checked, never re-sent.
       if (
         !dryRun &&
