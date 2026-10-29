@@ -315,19 +315,52 @@ export async function listPapers(ownerEmail: string) {
 }
 
 /** Records a publication: "published" only once it was read back from the network. */
-export async function markPublished(
+/**
+ * Claims an accepted paper for publishing, so two approved calls cannot both POST.
+ * Returns false if another call holds the claim or the paper is not accepted.
+ */
+export async function claimPublication(id: string): Promise<boolean> {
+  const claimed = await getDb()
+    .update(papers)
+    .set({ status: "publishing", updatedAt: now() })
+    .where(and(eq(papers.id, id), eq(papers.status, "accepted")))
+    .returning({ id: papers.id });
+  return claimed.length === 1;
+}
+
+/**
+ * Ends a claimed publication. With a ref, the paper is "published" only if it was
+ * read back from the network, otherwise "publish_unverified". Without a ref (the
+ * POST failed) the paper is left as "publish_unverified" when the request may
+ * have reached the server, or released back to "accepted" when it cannot have.
+ */
+export async function finishPublication(
   id: string,
-  ref: string,
-  verified: boolean,
+  outcome:
+    | { ref: string; verified: boolean }
+    | { ref: null; mayHaveWritten: boolean },
 ) {
-  if (!ref)
-    throw new TribunalError("No publication id to record.", "upstream_failed");
+  const status =
+    outcome.ref !== null
+      ? outcome.verified
+        ? "published"
+        : "publish_unverified"
+      : outcome.mayHaveWritten
+        ? "publish_unverified"
+        : "accepted";
   await getDb()
     .update(papers)
-    .set({
-      status: verified ? "published" : "publish_unverified",
-      publishedRef: ref,
-      updatedAt: now(),
-    })
-    .where(eq(papers.id, id));
+    .set({ status, publishedRef: outcome.ref, updatedAt: now() })
+    .where(and(eq(papers.id, id), eq(papers.status, "publishing")));
+  return status;
+}
+
+/** Re-checks an unverified publication by reading it back; never POSTs again. */
+export async function reverifyPublication(id: string, verified: boolean) {
+  if (!verified) return "publish_unverified";
+  await getDb()
+    .update(papers)
+    .set({ status: "published", updatedAt: now() })
+    .where(and(eq(papers.id, id), eq(papers.status, "publish_unverified")));
+  return "published";
 }

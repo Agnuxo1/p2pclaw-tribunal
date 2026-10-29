@@ -120,6 +120,21 @@ export default function PaperRoute() {
                 Publish to P2PCLAW…
               </Button>
             )}
+            {paper.status === "publish_unverified" && (
+              <Button
+                variant="outline"
+                className="mt-3 w-full"
+                onClick={() =>
+                  sendToAgentChat({
+                    message: `Re-check the P2PCLAW publication of paper ${paper.id}: call publish-to-p2pclaw with dryRun false, which only reads it back and never sends it again.`,
+                    submit: true,
+                    openSidebar: true,
+                  })
+                }
+              >
+                Re-check publication
+              </Button>
+            )}
           </section>
         )}
 

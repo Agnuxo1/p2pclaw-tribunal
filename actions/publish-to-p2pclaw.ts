@@ -9,9 +9,11 @@ import {
 } from "../server/tribunal/errors.js";
 import { confirmPublished, publishPaper } from "../server/tribunal/p2pclaw.js";
 import {
+  claimPublication,
+  finishPublication,
   loadPaper,
-  markPublished,
   requireUserEmail,
+  reverifyPublication,
 } from "../server/tribunal/store.js";
 
 export default defineAction({
@@ -33,14 +35,19 @@ export default defineAction({
   outputSchema: z.object({
     id: z.string(),
     dryRun: z.boolean(),
-    published: z.boolean(),
+    submitted: z
+      .boolean()
+      .describe("P2PCLAW accepted the paper and returned an id"),
+    published: z.boolean().describe("The paper was read back from the network"),
     verified: z.boolean(),
     ref: z.string().nullable(),
-    payloadPreview: z.object({
-      title: z.string(),
-      author: z.string(),
-      characters: z.number(),
-    }),
+    payloadPreview: z
+      .object({
+        title: z.string(),
+        author: z.string(),
+        characters: z.number(),
+      })
+      .nullable(),
     // Reserved write receipt read by the agent loop (declared so validation keeps it).
     _receipt: z
       .custom<WriteReceipt>((v) => typeof v === "object" && v !== null)
@@ -51,6 +58,17 @@ export default defineAction({
     guarded(async () => {
       const email = requireUserEmail(ctx?.userEmail);
       const { paper, versions, tribunal } = await loadPaper(email, paperId);
+      // An earlier publish that could not be read back is re-checked, never re-sent.
+      if (
+        !dryRun &&
+        paper.status === "publish_unverified" &&
+        paper.publishedRef
+      ) {
+        const ref = paper.publishedRef;
+        const verified = await confirmPublished(ref);
+        await reverifyPublication(paperId, verified);
+        return publishResult(paperId, ref, verified, null);
+      }
       if (paper.status !== "accepted") {
         throw new TribunalError(
           `Only accepted papers can be published (status: ${paper.status}).`,
@@ -72,40 +90,63 @@ export default defineAction({
         return {
           id: paperId,
           dryRun: true,
+          submitted: false,
           published: false,
           verified: false,
           ref: null,
           payloadPreview: preview,
         };
       }
-      const ref = await publishPaper({
-        title: v.title,
-        content,
-        author,
-        agentId: "p2pclaw-tribunal-agent-native",
-      });
+      if (!(await claimPublication(paperId))) {
+        throw new TribunalError(
+          "Another publish of this paper is in progress or already done.",
+          "conflict",
+        );
+      }
+      let ref: string;
+      try {
+        ref = await publishPaper({
+          title: v.title,
+          content,
+          author,
+          agentId: "p2pclaw-tribunal-agent-native",
+        });
+      } catch (err) {
+        const mayHaveWritten =
+          err instanceof TribunalError ? err.mayHaveWritten : true;
+        await finishPublication(paperId, { ref: null, mayHaveWritten });
+        throw err;
+      }
       // The API accepted the paper; reading it back is the confirmation.
       const verified = await confirmPublished(ref);
-      await markPublished(paperId, ref, verified);
-      const _receipt: WriteReceipt = {
-        changed: true,
-        verified: verified ? true : "unverified",
-        subject: paperId,
-        summary: verified
-          ? `Published as ${ref} and read back from P2PCLAW.`
-          : `P2PCLAW accepted ${ref}, but it could not be read back yet.`,
-        checks: [
-          { id: "read-back", ok: verified, detail: `GET /papers/${ref}` },
-        ],
-      };
-      return {
-        id: paperId,
-        dryRun: false,
-        published: true,
-        verified,
-        ref,
-        payloadPreview: preview,
-        _receipt,
-      };
+      await finishPublication(paperId, { ref, verified });
+      return publishResult(paperId, ref, verified, preview);
     }),
 });
+
+function publishResult(
+  id: string,
+  ref: string,
+  verified: boolean,
+  payloadPreview: { title: string; author: string; characters: number } | null,
+) {
+  const _receipt: WriteReceipt = {
+    changed: true,
+    verified: verified ? true : "unverified",
+    subject: id,
+    summary: verified
+      ? `Published as ${ref} and read back from P2PCLAW.`
+      : `P2PCLAW accepted ${ref}, but it could not be read back yet; call publish again later to re-check.`,
+    checks: [{ id: "read-back", ok: verified, detail: `GET /papers/${ref}` }],
+  };
+  return {
+    id,
+    dryRun: false,
+    submitted: true,
+    published: verified,
+    verified,
+    ref,
+    payloadPreview,
+    _receipt,
+  };
+}
