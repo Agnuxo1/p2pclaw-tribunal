@@ -29,6 +29,9 @@ export default defineAction({
       const result = await recordVerdict(
         requireUserEmail(ctx?.userEmail),
         paperId,
+        {
+          hideOpenTally: ctx?.caller !== "frontend",
+        },
       );
       if (result.verdict === "revise")
         return { ...result, nextRequiredAction: "save-draft" };

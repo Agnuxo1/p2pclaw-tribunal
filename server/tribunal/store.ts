@@ -6,7 +6,8 @@ import { TribunalError } from "./errors.js";
 import { MAX_ROUNDS, tribunalVerdict, type ReviewScores } from "./score.js";
 
 export function requireUserEmail(email: string | undefined | null): string {
-  if (!email) throw new Error("Sign in to use the tribunal.");
+  if (!email)
+    throw new TribunalError("Sign in to use the tribunal.", "unauthorized");
   return email;
 }
 
@@ -169,6 +170,7 @@ export async function submitReview(
       recommendation: input.recommendation,
       comments: input.comments,
       reviewerThread,
+      counted: 1,
       createdAt: now(),
     });
   } catch (err) {
@@ -200,7 +202,10 @@ export async function loadPaper(
     .from(reviews)
     .where(eq(reviews.paperId, id))
     .orderBy(asc(reviews.createdAt));
-  const current = allReviews.filter((r) => r.version === paper.currentVersion);
+  // Only votes recorded under the independence rules count (legacy rows have counted = NULL).
+  const current = allReviews.filter(
+    (r) => r.version === paper.currentVersion && r.counted === 1,
+  );
   const tribunal = tribunalVerdict(current.map(toScores), paper.round);
   // While a round is open, agents see neither the votes nor any tally of them.
   const hidden = Boolean(opts.hideOpenRound) && paper.status === "under_review";
@@ -240,20 +245,57 @@ export function toScores(r: typeof reviews.$inferSelect): ReviewScores {
   };
 }
 
-export async function recordVerdict(ownerEmail: string, id: string) {
+export async function recordVerdict(
+  ownerEmail: string,
+  id: string,
+  opts: { hideOpenTally?: boolean } = {},
+) {
   const { paper, tribunal } = await loadPaper(ownerEmail, id);
   if (paper.mode === "solo")
     throw new TribunalError(
       "Solo-mode papers have no tribunal.",
       "invalid_state",
     );
-  if (tribunal.verdict !== "pending") {
-    await getDb()
-      .update(papers)
-      .set({ status: tribunal.verdict, updatedAt: now() })
-      .where(eq(papers.id, id));
+  if (paper.status !== "under_review") {
+    throw new TribunalError(
+      `No open review round: the paper is "${paper.status}".`,
+      "invalid_state",
+    );
   }
-  return { id, version: paper.currentVersion, round: paper.round, ...tribunal };
+  const base = { id, version: paper.currentVersion, round: paper.round };
+  if (tribunal.verdict === "pending") {
+    // An agent may call this before voting; it must not learn the open tally.
+    return opts.hideOpenTally
+      ? {
+          ...base,
+          verdict: "pending" as const,
+          reviewCount: 0,
+          dimensionMeans: null,
+          overall: null,
+          rejects: 0,
+          reason: "Quorum not reached yet; votes stay hidden until it is.",
+        }
+      : { ...base, ...tribunal };
+  }
+  // Closes exactly the round that was tallied: a late call cannot reopen a newer version.
+  const closed = await getDb()
+    .update(papers)
+    .set({ status: tribunal.verdict, updatedAt: now() })
+    .where(
+      and(
+        eq(papers.id, id),
+        eq(papers.currentVersion, paper.currentVersion),
+        eq(papers.status, "under_review"),
+      ),
+    )
+    .returning({ id: papers.id });
+  if (closed.length !== 1) {
+    throw new TribunalError(
+      "The paper changed while the verdict was computed; read it again.",
+      "conflict",
+    );
+  }
+  return { ...base, ...tribunal };
 }
 
 export async function listPapers(ownerEmail: string) {
@@ -272,11 +314,20 @@ export async function listPapers(ownerEmail: string) {
     .limit(100);
 }
 
-export async function markPublished(id: string, ref: string) {
+/** Records a publication: "published" only once it was read back from the network. */
+export async function markPublished(
+  id: string,
+  ref: string,
+  verified: boolean,
+) {
   if (!ref)
     throw new TribunalError("No publication id to record.", "upstream_failed");
   await getDb()
     .update(papers)
-    .set({ status: "published", publishedRef: ref, updatedAt: now() })
+    .set({
+      status: verified ? "published" : "publish_unverified",
+      publishedRef: ref,
+      updatedAt: now(),
+    })
     .where(eq(papers.id, id));
 }

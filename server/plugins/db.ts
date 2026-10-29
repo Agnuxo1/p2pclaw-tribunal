@@ -71,10 +71,14 @@ export const runTribunalMigrations = runMigrations(
       sql: `CREATE UNIQUE INDEX IF NOT EXISTS uq_versions_paper_version ON paper_versions (paper_id, version)`,
     },
     {
+      // Reviews written before the independence rules stay readable but never
+      // count (counted IS NULL), so the uniqueness rules apply only to counted
+      // votes and cannot fail on legacy duplicates.
       version: 7,
-      name: "one-review-per-lens-and-thread",
-      sql: `CREATE UNIQUE INDEX IF NOT EXISTS uq_reviews_version_lens ON reviews (paper_id, version, lens);
-  CREATE UNIQUE INDEX IF NOT EXISTS uq_reviews_version_thread ON reviews (paper_id, version, reviewer_thread)`,
+      name: "counted-votes-partial-uniques",
+      sql: `ALTER TABLE reviews ADD COLUMN IF NOT EXISTS counted INTEGER;
+  CREATE UNIQUE INDEX IF NOT EXISTS uq_counted_reviews_lens ON reviews (paper_id, version, lens) WHERE counted = 1;
+  CREATE UNIQUE INDEX IF NOT EXISTS uq_counted_reviews_thread ON reviews (paper_id, version, reviewer_thread) WHERE counted = 1`,
     },
   ],
   { table: "tribunal_migrations" },

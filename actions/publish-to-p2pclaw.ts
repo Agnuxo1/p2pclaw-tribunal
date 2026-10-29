@@ -84,9 +84,9 @@ export default defineAction({
         author,
         agentId: "p2pclaw-tribunal-agent-native",
       });
-      await markPublished(paperId, ref);
       // The API accepted the paper; reading it back is the confirmation.
       const verified = await confirmPublished(ref);
+      await markPublished(paperId, ref, verified);
       const _receipt: WriteReceipt = {
         changed: true,
         verified: verified ? true : "unverified",
