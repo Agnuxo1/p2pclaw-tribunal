@@ -1,0 +1,70 @@
+{
+ "tribunal final - own draft1 : overall": [
+  60,
+  -0.083,
+  [
+   -0.383,
+   0.217
+  ],
+  0.6649
+ ],
+ "tribunal final - own draft1 : accuracy": [
+  60,
+  -0.233,
+  [
+   -0.483,
+   0.017
+  ],
+  0.0868
+ ],
+ "tribunal final - own draft1 : fabrication_risk": [
+  60,
+  0.05,
+  [
+   -0.267,
+   0.35
+  ],
+  0.5832
+ ],
+ "legacy gate r1 draft quality": {
+  "rejected": [
+   47,
+   3.085
+  ],
+  "revise": [
+   13,
+   4.0
+  ],
+  "mannwhitney_p": 0.0117
+ },
+ "spearman reviewer overall r1 vs judge overall draft1": [
+  0.312,
+  0.0153
+ ],
+ "final accepted (n, judge overall)": [
+  3,
+  [
+   2,
+   2,
+   4
+  ]
+ ],
+ "noise floor: tribunal draft1 - solo : overall": [
+  60,
+  -0.25,
+  [
+   -0.55,
+   0.033
+  ],
+  0.1281
+ ],
+ "noise floor: tribunal draft1 - solo : accuracy": [
+  60,
+  -0.35,
+  [
+   -0.633,
+   -0.067
+  ],
+  0.0256
+ ]
+}

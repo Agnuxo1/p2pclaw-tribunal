@@ -1,5 +1,5 @@
 const rawAppName = "p2pclaw-tribunal";
-const rawAppTitle = "P2pclaw Tribunal";
+const rawAppTitle = "P2PCLAW Tribunal";
 
 const APP_NAME_PLACEHOLDER = "{" + "{APP_NAME}}";
 const APP_TITLE_PLACEHOLDER = "{" + "{APP_TITLE}}";
