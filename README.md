@@ -26,7 +26,7 @@ The `/papers` screen shows every paper; `/papers/:id` shows each version, every 
 | Actions (`defineAction`) | 8 actions are the single contract for the agent, the UI, HTTP, MCP, A2A and the CLI |
 | Agent teams | Researcher and three reviewers are sub-agents with their own threads, shown as live chips |
 | Human approval | Publishing to a public network is gated by `needsApproval` |
-| Action context (`ctx.caller`, `ctx.threadId`) | Independence is enforced in code, not by the prompt: an agent review must come from its own sub-agent thread, never the one that wrote the version or already reviewed it; agents cannot read the open round's reviews; quorum needs three distinct lenses. People can also review from the UI |
+| Action context (`ctx.caller`, `ctx.threadId`) | Independence is enforced in code, not by the prompt: an agent review must come from its own sub-agent thread, never the one that wrote the version or already reviewed it; agents cannot read the open round's reviews; quorum needs three distinct lenses. Two unique indexes (one vote per lens, one per thread) close the race between concurrent reviewers |
 | Shared SQL state | Papers, versions and reviews live in PGlite/Postgres; the UI updates as agents write |
 | Bring your own LLM | Runs on an open model (Qwen3.5-9B via vLLM) through the OpenAI-compatible endpoint; any supported provider works |
 
@@ -85,7 +85,7 @@ Do peer reviews help when the reviewers are stronger than the author? Same tribu
 | H2 final − first draft | +0.13 [−0.15, +0.42], p = 0.37 | +0.07 [−0.23, +0.37] | +0.22 [−0.03, +0.45], p = 0.06 |
 | H1 final − first draft (replication) | −0.05 [−0.35, +0.25] | −0.12 [−0.42, +0.18] | +0.13 [−0.18, +0.42] |
 
-**H2 is not supported.** Stronger reviewers move every score in the right direction, but no interval excludes zero. The 27B reviewers were even stricter: all 60 papers were rejected after two rounds (58/60 complete reports, 6/360 reviews unparsed, about 21.9 k tokens per task). The H1 result replicates in the new session.
+**H2 is not supported.** Stronger reviewers move overall, accuracy and fabrication risk in the right direction (clarity does not move), but no interval excludes zero. The 27B reviewers were even stricter: all 60 papers were rejected after two rounds (58/60 complete reports, 6/360 reviews unparsed, about 21.9 k tokens per task). The H1 result replicates in the new session.
 
 **Judge reliability.** 120 texts were judged in both sessions. Test-retest Spearman ρ = 0.83; 117/120 scores within one point; the second session scored 0.2 lower on average. That drift is why every H2 comparison is made within a single session.
 
@@ -124,7 +124,7 @@ P2PCLAW (network, API and tribunal concept) existed before the hackathon and is 
 
 ## Limits
 
-- One open 9B model generates and reviews. Stronger models may behave differently.
+- The researcher is always an open 9B model; reviewers are the same 9B model (main run) or a 27B model (H2). Stronger or different models may behave differently.
 - The judge is a single LLM, not a human panel. It is a different model family from the generator, but LLM judges have known biases.
 - The harness runs the same protocol as the app outside the UI, so that 180 runs are reproducible. The in-app agent team adds orchestration that the harness does not measure.
 - Prior-work search is keyword matching over the 200 latest P2PCLAW papers.

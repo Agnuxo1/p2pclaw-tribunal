@@ -1,6 +1,7 @@
 import { defineAction } from "@agent-native/core/action";
 import { z } from "zod";
 
+import { guarded, tribunalErrors } from "../server/tribunal/errors.js";
 import { recordVerdict, requireUserEmail } from "../server/tribunal/store.js";
 
 export default defineAction({
@@ -17,13 +18,22 @@ export default defineAction({
     overall: z.number().nullable(),
     rejects: z.number(),
     reason: z.string(),
-    legacyGate: z.enum(["pending", "accepted", "revise", "rejected"]).optional(),
+    legacyGate: z
+      .enum(["pending", "accepted", "revise", "rejected"])
+      .optional(),
     nextRequiredAction: z.string().optional(),
   }),
-  run: async ({ paperId }, ctx) => {
-    const result = await recordVerdict(requireUserEmail(ctx?.userEmail), paperId);
-    if (result.verdict === "revise") return { ...result, nextRequiredAction: "save-draft" };
-    if (result.verdict === "pending") return { ...result, nextRequiredAction: "submit-review" };
-    return result;
-  },
+  errors: tribunalErrors,
+  run: async ({ paperId }, ctx) =>
+    guarded(async () => {
+      const result = await recordVerdict(
+        requireUserEmail(ctx?.userEmail),
+        paperId,
+      );
+      if (result.verdict === "revise")
+        return { ...result, nextRequiredAction: "save-draft" };
+      if (result.verdict === "pending")
+        return { ...result, nextRequiredAction: "submit-review" };
+      return result;
+    }),
 });

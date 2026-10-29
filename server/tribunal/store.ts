@@ -2,6 +2,7 @@ import { and, asc, desc, eq } from "drizzle-orm";
 
 import { getDb } from "../db/index.js";
 import { papers, paperVersions, reviews } from "../db/schema.js";
+import { TribunalError } from "./errors.js";
 import { MAX_ROUNDS, tribunalVerdict, type ReviewScores } from "./score.js";
 
 export function requireUserEmail(email: string | undefined | null): string {
@@ -13,7 +14,11 @@ const now = () => new Date().toISOString();
 const newId = (prefix: string) =>
   `${prefix}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
 
-export async function createPaper(ownerEmail: string, question: string, mode: string) {
+export async function createPaper(
+  ownerEmail: string,
+  question: string,
+  mode: string,
+) {
   const id = newId("paper");
   const ts = now();
   await getDb().insert(papers).values({
@@ -35,39 +40,72 @@ export async function getOwnedPaper(ownerEmail: string, id: string) {
     .select()
     .from(papers)
     .where(and(eq(papers.id, id), eq(papers.ownerEmail, ownerEmail)));
-  if (!row) throw new Error(`Paper ${id} not found.`);
+  if (!row) throw new TribunalError(`Paper ${id} not found.`, "not_found");
   return row;
 }
 
 export async function saveDraft(
   ownerEmail: string,
-  input: { paperId: string; title: string; abstract: string; body: string; changelog?: string | undefined },
+  input: {
+    paperId: string;
+    title: string;
+    abstract: string;
+    body: string;
+    changelog?: string | undefined;
+  },
   authorThread?: string,
 ) {
   const paper = await getOwnedPaper(ownerEmail, input.paperId);
   // A new version only opens a round when the paper is waiting for one.
   if (paper.status !== "drafting" && paper.status !== "revise") {
-    throw new Error(`Cannot save a new version while the paper is "${paper.status}".`);
+    throw new TribunalError(
+      `Cannot save a new version while the paper is "${paper.status}".`,
+      "invalid_state",
+    );
   }
-  if (paper.round >= MAX_ROUNDS) throw new Error(`The tribunal allows at most ${MAX_ROUNDS} rounds.`);
+  if (paper.round >= MAX_ROUNDS)
+    throw new TribunalError(
+      `The tribunal allows at most ${MAX_ROUNDS} rounds.`,
+      "invalid_state",
+    );
   const version = paper.currentVersion + 1;
-  const db = getDb();
-  await db.insert(paperVersions).values({
-    id: newId("ver"),
-    paperId: paper.id,
-    version,
-    title: input.title,
-    abstract: input.abstract,
-    body: input.body,
-    changelog: input.changelog ?? null,
-    authorThread: authorThread ?? null,
-    createdAt: now(),
-  });
   const status = paper.mode === "solo" ? "final" : "under_review";
-  await db
-    .update(papers)
-    .set({ currentVersion: version, status, round: paper.round + 1, updatedAt: now() })
-    .where(eq(papers.id, paper.id));
+  await getDb().transaction(async (tx) => {
+    // Conditional on the state read above, so two concurrent saves cannot both win;
+    // the unique (paper_id, version) index backs this up.
+    const moved = await tx
+      .update(papers)
+      .set({
+        currentVersion: version,
+        status,
+        round: paper.round + 1,
+        updatedAt: now(),
+      })
+      .where(
+        and(
+          eq(papers.id, paper.id),
+          eq(papers.currentVersion, paper.currentVersion),
+          eq(papers.status, paper.status),
+        ),
+      )
+      .returning({ id: papers.id });
+    if (moved.length !== 1)
+      throw new TribunalError(
+        "The paper changed while saving; read it again and retry.",
+        "conflict",
+      );
+    await tx.insert(paperVersions).values({
+      id: newId("ver"),
+      paperId: paper.id,
+      version,
+      title: input.title,
+      abstract: input.abstract,
+      body: input.body,
+      changelog: input.changelog ?? null,
+      authorThread: authorThread ?? null,
+      createdAt: now(),
+    });
+  });
   return { id: paper.id, version, status };
 }
 
@@ -81,52 +119,75 @@ export async function submitReview(
     recommendation: ReviewScores["recommendation"];
     comments: string;
   },
-  caller: { kind: string; threadId?: string | undefined },
+  reviewerThread: string | undefined,
 ) {
   const paper = await getOwnedPaper(ownerEmail, input.paperId);
-  if (paper.mode === "solo") throw new Error("Solo-mode papers have no tribunal.");
-  if (paper.status !== "under_review") throw new Error(`Paper is "${paper.status}", not under review.`);
-  // A person reviewing from the app UI is independent by construction. Any other
-  // caller must be an in-app agent thread whose independence can be checked.
-  const reviewerThread = caller.kind === "frontend" ? undefined : caller.threadId;
-  if (caller.kind !== "frontend" && !reviewerThread) {
-    throw new Error("Agent reviews must come from an in-app reviewer sub-agent thread, so independence can be checked.");
+  if (paper.mode === "solo")
+    throw new TribunalError(
+      "Solo-mode papers have no tribunal.",
+      "invalid_state",
+    );
+  if (paper.status !== "under_review")
+    throw new TribunalError(
+      `Paper is "${paper.status}", not under review.`,
+      "invalid_state",
+    );
+  // Every vote comes from an in-app agent thread, so independence can be checked:
+  // not the thread that wrote the version, one vote per thread and one per lens
+  // (the last two are unique indexes, so concurrent calls cannot slip through).
+  if (!reviewerThread) {
+    throw new TribunalError(
+      "Reviews must come from an in-app reviewer sub-agent thread, so their independence can be checked.",
+      "not_independent",
+    );
   }
-  if (reviewerThread) {
-    // Independence is structural: an agent may not review a version it wrote,
-    // and each agent thread reviews a version at most once.
-    const db = getDb();
-    const [version] = await db
-      .select({ authorThread: paperVersions.authorThread })
-      .from(paperVersions)
-      .where(and(eq(paperVersions.paperId, paper.id), eq(paperVersions.version, paper.currentVersion)));
-    const prior = await db
-      .select({ reviewerThread: reviews.reviewerThread })
-      .from(reviews)
-      .where(and(eq(reviews.paperId, paper.id), eq(reviews.version, paper.currentVersion)));
-    if (version?.authorThread === reviewerThread || prior.some((r) => r.reviewerThread === reviewerThread)) {
-      throw new Error(
-        "Reviews must be independent: this agent thread wrote this version or already reviewed it. Spawn a separate reviewer sub-agent with agent-teams and let it call submit-review.",
-      );
-    }
+  const db = getDb();
+  const [version] = await db
+    .select({ authorThread: paperVersions.authorThread })
+    .from(paperVersions)
+    .where(
+      and(
+        eq(paperVersions.paperId, paper.id),
+        eq(paperVersions.version, paper.currentVersion),
+      ),
+    );
+  if (version?.authorThread === reviewerThread) {
+    throw new TribunalError(
+      "Reviews must be independent: this agent thread wrote this version. Spawn a separate reviewer sub-agent with agent-teams and let it call submit-review.",
+      "not_independent",
+    );
   }
   const id = newId("rev");
-  await getDb().insert(reviews).values({
-    id,
-    paperId: paper.id,
-    version: paper.currentVersion,
-    reviewer: input.reviewer,
-    lens: input.lens,
-    ...input.scores,
-    recommendation: input.recommendation,
-    comments: input.comments,
-    reviewerThread: reviewerThread ?? null,
-    createdAt: now(),
-  });
+  try {
+    await db.insert(reviews).values({
+      id,
+      paperId: paper.id,
+      version: paper.currentVersion,
+      reviewer: input.reviewer,
+      lens: input.lens,
+      ...input.scores,
+      recommendation: input.recommendation,
+      comments: input.comments,
+      reviewerThread,
+      createdAt: now(),
+    });
+  } catch (err) {
+    if (/unique|duplicate/i.test(String(err))) {
+      throw new TribunalError(
+        "Reviews must be independent: this version already has a review from this agent thread or for this lens. Spawn a separate reviewer sub-agent for each remaining lens.",
+        "not_independent",
+      );
+    }
+    throw err;
+  }
   return { id, paperId: paper.id, version: paper.currentVersion };
 }
 
-export async function loadPaper(ownerEmail: string, id: string, opts: { hideOpenRound?: boolean } = {}) {
+export async function loadPaper(
+  ownerEmail: string,
+  id: string,
+  opts: { hideOpenRound?: boolean } = {},
+) {
   const paper = await getOwnedPaper(ownerEmail, id);
   const db = getDb();
   const versions = await db
@@ -141,18 +202,26 @@ export async function loadPaper(ownerEmail: string, id: string, opts: { hideOpen
     .orderBy(asc(reviews.createdAt));
   const current = allReviews.filter((r) => r.version === paper.currentVersion);
   const tribunal = tribunalVerdict(current.map(toScores), paper.round);
-  // Agents must not read the open round's reviews before voting.
-  const roundOpen = paper.status === "under_review";
-  const visible = opts.hideOpenRound && roundOpen
-    ? allReviews.filter((r) => r.version !== paper.currentVersion)
-    : allReviews;
-  const hiddenReviews = allReviews.length - visible.length;
+  // While a round is open, agents see neither the votes nor any tally of them.
+  const hidden = Boolean(opts.hideOpenRound) && paper.status === "under_review";
   return {
     paper,
     versions,
-    reviews: visible,
-    hiddenReviews,
-    tribunal: opts.hideOpenRound && roundOpen ? { ...tribunal, dimensionMeans: null, overall: null } : tribunal,
+    reviews: hidden
+      ? allReviews.filter((r) => r.version !== paper.currentVersion)
+      : allReviews,
+    roundOpen: hidden,
+    tribunal: hidden
+      ? {
+          verdict: "pending" as const,
+          reviewCount: 0,
+          dimensionMeans: null,
+          overall: null,
+          rejects: 0,
+          reason:
+            "Review round open: votes stay hidden until tribunal-verdict closes it.",
+        }
+      : tribunal,
   };
 }
 
@@ -173,7 +242,11 @@ export function toScores(r: typeof reviews.$inferSelect): ReviewScores {
 
 export async function recordVerdict(ownerEmail: string, id: string) {
   const { paper, tribunal } = await loadPaper(ownerEmail, id);
-  if (paper.mode === "solo") throw new Error("Solo-mode papers have no tribunal.");
+  if (paper.mode === "solo")
+    throw new TribunalError(
+      "Solo-mode papers have no tribunal.",
+      "invalid_state",
+    );
   if (tribunal.verdict !== "pending") {
     await getDb()
       .update(papers)
@@ -200,7 +273,8 @@ export async function listPapers(ownerEmail: string) {
 }
 
 export async function markPublished(id: string, ref: string) {
-  if (!ref) throw new Error("No publication id to record.");
+  if (!ref)
+    throw new TribunalError("No publication id to record.", "upstream_failed");
   await getDb()
     .update(papers)
     .set({ status: "published", publishedRef: ref, updatedAt: now() })

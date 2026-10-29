@@ -1,6 +1,7 @@
 import { defineAction } from "@agent-native/core/action";
 import { z } from "zod";
 
+import { guarded, tribunalErrors } from "../server/tribunal/errors.js";
 import { requireUserEmail, saveDraft } from "../server/tribunal/store.js";
 
 export default defineAction({
@@ -13,7 +14,9 @@ export default defineAction({
     body: z
       .string()
       .min(200)
-      .describe("Markdown body: Introduction, Method, Results/Analysis, Limitations, References"),
+      .describe(
+        "Markdown body: Introduction, Method, Results/Analysis, Limitations, References",
+      ),
     changelog: z
       .string()
       .optional()
@@ -25,10 +28,16 @@ export default defineAction({
     status: z.string(),
     nextRequiredAction: z.string().optional(),
   }),
-  run: async (args, ctx) => {
-    const saved = await saveDraft(requireUserEmail(ctx?.userEmail), args, ctx?.threadId);
-    return saved.status === "under_review"
-      ? { ...saved, nextRequiredAction: "submit-review" }
-      : saved;
-  },
+  errors: tribunalErrors,
+  run: async (args, ctx) =>
+    guarded(async () => {
+      const saved = await saveDraft(
+        requireUserEmail(ctx?.userEmail),
+        args,
+        ctx?.threadId,
+      );
+      return saved.status === "under_review"
+        ? { ...saved, nextRequiredAction: "submit-review" }
+        : saved;
+    }),
 });

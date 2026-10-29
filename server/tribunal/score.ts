@@ -78,8 +78,16 @@ export function tribunalVerdict(
   // Before the last round any non-accept outcome sends the paper back for
   // revision (pilot-driven amendment, JEV 0.98); rejection is final only in
   // the last round. legacyGate keeps the original immediate-reject rule.
-  const accepted = overall >= ACCEPT_MEAN && minDim >= ACCEPT_MIN_DIMENSION && rejects === 0;
-  const legacyGate: Verdict = overall < REJECT_MEAN || rejects >= 2 ? "rejected" : accepted ? "accepted" : round >= MAX_ROUNDS ? "rejected" : "revise";
+  const accepted =
+    overall >= ACCEPT_MEAN && minDim >= ACCEPT_MIN_DIMENSION && rejects === 0;
+  const legacyGate: Verdict =
+    overall < REJECT_MEAN || rejects >= 2
+      ? "rejected"
+      : accepted
+        ? "accepted"
+        : round >= MAX_ROUNDS
+          ? "rejected"
+          : "revise";
   let verdict: Verdict;
   let reason: string;
   if (accepted) {
@@ -92,5 +100,13 @@ export function tribunalVerdict(
     verdict = "rejected";
     reason = `Still below the acceptance bar after ${MAX_ROUNDS} review rounds (overall ${overall}, weakest ${minDim}, ${rejects} reject vote(s)).`;
   }
-  return { verdict, legacyGate, reviewCount: votes.length, dimensionMeans: means, overall, rejects, reason };
+  return {
+    verdict,
+    legacyGate,
+    reviewCount: votes.length,
+    dimensionMeans: means,
+    overall,
+    rejects,
+    reason,
+  };
 }

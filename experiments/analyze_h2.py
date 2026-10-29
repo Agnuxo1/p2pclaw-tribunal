@@ -7,7 +7,7 @@ import statistics as st
 from collections import Counter
 from pathlib import Path
 
-from scipy.stats import wilcoxon
+from scipy.stats import spearmanr, wilcoxon
 
 from analyze import METRICS, boot_ci, load
 
@@ -17,6 +17,7 @@ def main() -> None:
     ap.add_argument("--runs-h1", default="results/runs.jsonl")
     ap.add_argument("--runs-h2", default="results_h2/runs_h2.jsonl")
     ap.add_argument("--judgements", default="results_h2/judgements_h2.jsonl")
+    ap.add_argument("--judgements-s1", default="results/judgements.jsonl", help="session-1 judgements, for test-retest")
     ap.add_argument("--out", default="results_h2/summary_h2.json")
     a = ap.parse_args()
     h1 = {r["run_id"]: r for r in load(Path(a.runs_h1)) if r["arm"] == "tribunal"}
@@ -54,6 +55,16 @@ def main() -> None:
     out["h2_completion_rate"] = round(sum(r["completed"] for r in h2.values()) / len(h2), 3)
     parsed = [v["parsed"] for r in h2.values() for h in r["history"] if h["event"] == "tribunal" for v in h["reviews"]]
     out["h2_reviews_unparsed"] = f"{parsed.count(False)}/{len(parsed)}"
+    # Judge test-retest: texts judged in both sessions (H1 finals and first drafts).
+    j1 = {x["run_id"]: x for x in load(Path(a.judgements_s1))}
+    common = [k for k in j if k in j1]
+    s1 = [j1[k]["overall"] for k in common]
+    s2 = [j[k]["overall"] for k in common]
+    out["judge_test_retest_overall"] = {
+        "n": len(common), "spearman": round(float(spearmanr(s1, s2).statistic), 3),
+        "exact_agreement": sum(x == y for x, y in zip(s1, s2)),
+        "within_1": sum(abs(x - y) <= 1 for x, y in zip(s1, s2)),
+        "mean_s1": round(st.fmean(s1), 3), "mean_s2": round(st.fmean(s2), 3)}
     Path(a.out).write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(json.dumps(out, indent=2))
 
