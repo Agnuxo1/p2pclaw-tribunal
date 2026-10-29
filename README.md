@@ -69,9 +69,29 @@ Read with care:
 
 **What the tribunal may be good for (H3, exploratory).** H3 was registered *after* the main result (amendment A2), so treat it as exploratory. The reviewers' round-1 score correlates moderately with the blind judge's score of the same draft (Spearman ρ = 0.31, p = 0.015). Drafts the original immediate-reject gate would have blocked score 3.09 on the blind scale, against 4.00 for the 13 it would have sent to revision (Mann-Whitney p = 0.012, n = 47 vs 13). This suggests the tribunal's score carries some signal for deciding what *not* to publish. It does not show the tribunal can pick good papers: the 3 papers it finally accepted scored 2, 2 and 4. With this model, it is not a way to improve papers.
 
-H2_PLACEHOLDER
+### Follow-up H2: stronger reviewers (registered after the main run)
 
-Raw data: `experiments/results/runs.jsonl` (every draft, review and verdict), `results/judgements.jsonl`, `results/summary.json`, `results/secondary.json`.
+Do peer reviews help when the reviewers are stronger than the author? Same tribunal, same 60 first drafts, reviewers on **Qwen3.5-27B-AWQ** and the researcher still on Qwen3.5-9B. To remove draft noise and judge drift, the shared draft, the H1 final (9B reviewers) and the H2 final (27B reviewers) were judged blind in **one** fresh session (180 reports, new shuffle).
+
+| Text (same 60 drafts) | Overall | Accuracy | Fabrication risk |
+|---|---|---|---|
+| first draft | 3.07 | 3.37 | 1.85 |
+| final after 9B reviews (H1) | 3.02 | 3.25 | 1.98 |
+| final after 27B reviews (H2) | 3.20 | 3.43 | 2.07 |
+
+| Paired contrast (n = 60) | Overall [95 % CI], p | Accuracy | Fabrication risk |
+|---|---|---|---|
+| H2 final − H1 final | +0.18 [−0.12, +0.50], p = 0.34 | +0.18 [−0.12, +0.50] | +0.08 [−0.22, +0.40] |
+| H2 final − first draft | +0.13 [−0.15, +0.42], p = 0.37 | +0.07 [−0.23, +0.37] | +0.22 [−0.03, +0.45], p = 0.06 |
+| H1 final − first draft (replication) | −0.05 [−0.35, +0.25] | −0.12 [−0.42, +0.18] | +0.13 [−0.18, +0.42] |
+
+**H2 is not supported.** Stronger reviewers move every score in the right direction, but no interval excludes zero. The 27B reviewers were even stricter: all 60 papers were rejected after two rounds (58/60 complete reports, 6/360 reviews unparsed, about 21.9 k tokens per task). The H1 result replicates in the new session.
+
+**Judge reliability.** 120 texts were judged in both sessions. Test-retest Spearman ρ = 0.83; 117/120 scores within one point; the second session scored 0.2 lower on average. That drift is why every H2 comparison is made within a single session.
+
+Bottom line: at this model scale, P2PCLAW-style peer review **did not measurably improve** research reports, and it costs about 12× the tokens of a single draft. What it adds is transparency (every claim reviewed, scored and versioned in the UI) and a gate that keeps rejected work from being published.
+
+Raw data: `experiments/results/` (main run: every draft, review and verdict, judgements, summaries) and `experiments/results_h2/` (H2 runs, judgements and summary).
 
 ## Run it
 
@@ -92,6 +112,10 @@ python tribunal.py --check            # Python port == TypeScript rules
 bash run_job.sh                       # vLLM + 180 runs -> results/runs.jsonl
 python judge.py prepare && python judge.py run && python judge.py collect
 python analyze.py                     # -> results/summary.json
+bash run_h2_job.sh                    # H2: 27B reviewers on the same drafts
+python judge.py prepare --runs results/runs.jsonl results_h2/runs_h2.jsonl --arms tribunal,tribunal_h2 --work judge_h2 --seed 20261030
+python judge.py run --work judge_h2 && python judge.py collect --work judge_h2 --out results_h2/judgements_h2.jsonl
+python analyze_h2.py                  # -> results_h2/summary_h2.json
 ```
 
 ## Prior work and what is new

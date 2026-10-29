@@ -1,0 +1,211 @@
+{
+  "n_h2_runs": 60,
+  "n_judged": 180,
+  "means": {
+    "draft1": {
+      "overall": 3.067,
+      "accuracy": 3.367,
+      "fabrication_risk": 1.85,
+      "completeness": 4.667,
+      "reasoning": 3.467,
+      "clarity": 7.0,
+      "n": 60
+    },
+    "h1_final": {
+      "overall": 3.017,
+      "accuracy": 3.25,
+      "fabrication_risk": 1.983,
+      "completeness": 4.65,
+      "reasoning": 3.367,
+      "clarity": 6.983,
+      "n": 60
+    },
+    "h2_final": {
+      "overall": 3.2,
+      "accuracy": 3.433,
+      "fabrication_risk": 2.067,
+      "completeness": 4.733,
+      "reasoning": 3.533,
+      "clarity": 6.933,
+      "n": 60
+    }
+  },
+  "contrasts": {
+    "h2_final-h1_final:overall": {
+      "n_pairs": 60,
+      "mean_diff": 0.183,
+      "ci95": [
+        -0.117,
+        0.5
+      ],
+      "wilcoxon_p": 0.3437
+    },
+    "h2_final-h1_final:accuracy": {
+      "n_pairs": 60,
+      "mean_diff": 0.183,
+      "ci95": [
+        -0.117,
+        0.5
+      ],
+      "wilcoxon_p": 0.2881
+    },
+    "h2_final-h1_final:fabrication_risk": {
+      "n_pairs": 60,
+      "mean_diff": 0.083,
+      "ci95": [
+        -0.217,
+        0.4
+      ],
+      "wilcoxon_p": 0.917
+    },
+    "h2_final-h1_final:completeness": {
+      "n_pairs": 60,
+      "mean_diff": 0.083,
+      "ci95": [
+        -0.2,
+        0.367
+      ],
+      "wilcoxon_p": 0.5642
+    },
+    "h2_final-h1_final:reasoning": {
+      "n_pairs": 60,
+      "mean_diff": 0.167,
+      "ci95": [
+        -0.1,
+        0.45
+      ],
+      "wilcoxon_p": 0.3089
+    },
+    "h2_final-h1_final:clarity": {
+      "n_pairs": 60,
+      "mean_diff": -0.05,
+      "ci95": [
+        -0.333,
+        0.2
+      ],
+      "wilcoxon_p": 0.769
+    },
+    "h2_final-draft1:overall": {
+      "n_pairs": 60,
+      "mean_diff": 0.133,
+      "ci95": [
+        -0.15,
+        0.417
+      ],
+      "wilcoxon_p": 0.3701
+    },
+    "h2_final-draft1:accuracy": {
+      "n_pairs": 60,
+      "mean_diff": 0.067,
+      "ci95": [
+        -0.233,
+        0.367
+      ],
+      "wilcoxon_p": 0.6572
+    },
+    "h2_final-draft1:fabrication_risk": {
+      "n_pairs": 60,
+      "mean_diff": 0.217,
+      "ci95": [
+        -0.033,
+        0.45
+      ],
+      "wilcoxon_p": 0.0621
+    },
+    "h2_final-draft1:completeness": {
+      "n_pairs": 60,
+      "mean_diff": 0.067,
+      "ci95": [
+        -0.2,
+        0.333
+      ],
+      "wilcoxon_p": 0.6658
+    },
+    "h2_final-draft1:reasoning": {
+      "n_pairs": 60,
+      "mean_diff": 0.067,
+      "ci95": [
+        -0.233,
+        0.35
+      ],
+      "wilcoxon_p": 0.65
+    },
+    "h2_final-draft1:clarity": {
+      "n_pairs": 60,
+      "mean_diff": -0.067,
+      "ci95": [
+        -0.317,
+        0.15
+      ],
+      "wilcoxon_p": 0.8575
+    },
+    "h1_final-draft1 (session 2):overall": {
+      "n_pairs": 60,
+      "mean_diff": -0.05,
+      "ci95": [
+        -0.35,
+        0.25
+      ],
+      "wilcoxon_p": 0.8829
+    },
+    "h1_final-draft1 (session 2):accuracy": {
+      "n_pairs": 60,
+      "mean_diff": -0.117,
+      "ci95": [
+        -0.417,
+        0.183
+      ],
+      "wilcoxon_p": 0.586
+    },
+    "h1_final-draft1 (session 2):fabrication_risk": {
+      "n_pairs": 60,
+      "mean_diff": 0.133,
+      "ci95": [
+        -0.183,
+        0.417
+      ],
+      "wilcoxon_p": 0.1302
+    },
+    "h1_final-draft1 (session 2):completeness": {
+      "n_pairs": 60,
+      "mean_diff": -0.017,
+      "ci95": [
+        -0.25,
+        0.217
+      ],
+      "wilcoxon_p": 0.8503
+    },
+    "h1_final-draft1 (session 2):reasoning": {
+      "n_pairs": 60,
+      "mean_diff": -0.1,
+      "ci95": [
+        -0.383,
+        0.183
+      ],
+      "wilcoxon_p": 0.5476
+    },
+    "h1_final-draft1 (session 2):clarity": {
+      "n_pairs": 60,
+      "mean_diff": -0.017,
+      "ci95": [
+        -0.25,
+        0.25
+      ],
+      "wilcoxon_p": 0.5371
+    }
+  },
+  "h2_final_verdicts": {
+    "rejected": 60
+  },
+  "h2_mean_tokens": 21887.0,
+  "h2_completion_rate": 0.967,
+  "h2_reviews_unparsed": "6/360",
+  "judge_test_retest_overall": {
+    "n": 120,
+    "spearman": 0.83,
+    "exact_agreement": 69,
+    "within_1": 117,
+    "mean_s1": 3.242,
+    "mean_s2": 3.042
+  }
+}
