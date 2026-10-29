@@ -46,3 +46,6 @@ data/*.lock
 experiments/judge/
 experiments/judge_test/
 experiments/judge_run.log
+experiments/judge_h2/
+experiments/judge_h2_run.log
+experiments/results_h2/state.json
