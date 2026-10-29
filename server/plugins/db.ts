@@ -70,6 +70,12 @@ export const runTribunalMigrations = runMigrations(
       name: "unique-paper-version",
       sql: `CREATE UNIQUE INDEX IF NOT EXISTS uq_versions_paper_version ON paper_versions (paper_id, version)`,
     },
+    {
+      version: 7,
+      name: "one-review-per-lens-and-thread",
+      sql: `CREATE UNIQUE INDEX IF NOT EXISTS uq_reviews_version_lens ON reviews (paper_id, version, lens);
+  CREATE UNIQUE INDEX IF NOT EXISTS uq_reviews_version_thread ON reviews (paper_id, version, reviewer_thread)`,
+    },
   ],
   { table: "tribunal_migrations" },
 );

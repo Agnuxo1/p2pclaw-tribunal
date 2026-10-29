@@ -31,13 +31,16 @@ jobs:
           python-version: "3.13"
       - name: Python harness rules == TypeScript app rules (300 fixtures)
         run: cd experiments && python tribunal.py --check
-      - name: Recompute the published summary from the raw logs
+      - name: Recompute the published summaries from the raw logs
         run: |
           pip install scipy==1.15.1
-          cd experiments && python analyze.py --out /tmp/summary.json > /dev/null
+          cd experiments
+          python analyze.py --out /tmp/summary.json > /dev/null
+          python analyze_h2.py --out /tmp/summary_h2.json > /dev/null
           python - <<'PY'
           import json
-          a = json.load(open("/tmp/summary.json")); b = json.load(open("experiments/results/summary.json"))
-          assert a == b, "results/summary.json does not match a fresh analysis of the logs"
-          print("summary reproduced")
+          for fresh, published in [("/tmp/summary.json", "results/summary.json"),
+                                   ("/tmp/summary_h2.json", "results_h2/summary_h2.json")]:
+              assert json.load(open(fresh)) == json.load(open(published)), published + " does not match a fresh analysis"
+          print("summaries reproduced")
           PY
