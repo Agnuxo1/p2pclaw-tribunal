@@ -5,12 +5,19 @@ import {
 } from "@agent-native/core/server";
 
 import actionsRegistry from "../../.generated/actions-registry.js";
+import { ORCHESTRATOR_PROMPT } from "../tribunal/prompts.js";
 
 const INITIAL_TOOL_NAMES = [
   "view-screen",
   "navigate",
-  "hello",
-  "provider-api-request",
+  "search-p2pclaw",
+  "create-paper",
+  "save-draft",
+  "get-paper",
+  "submit-review",
+  "tribunal-verdict",
+  "list-papers",
+  "publish-to-p2pclaw",
   "ask-question",
 ];
 
@@ -20,9 +27,5 @@ export default createAgentChatPlugin({
   mcp: { connectorCatalog: [], appApprovalPage: true },
   initialToolNames: INITIAL_TOOL_NAMES,
   resolveOrgId: async (event) => (await getOrgContext(event)).orgId,
-  systemPrompt: `You are the Chat app agent.
-
-This is a minimal chat-first Agent-Native app. The chat is the product surface, and actions are the contract shared by chat, UI, HTTP, MCP, A2A, and CLI.
-
-Use actions as the source of truth. Start by inspecting the current screen when context matters. When the user asks to extend this app, keep the change small and agent-native: add or update actions, expose useful UI, and keep application state/navigation visible to the agent.`,
+  systemPrompt: ORCHESTRATOR_PROMPT,
 });

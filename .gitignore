@@ -41,3 +41,8 @@ learnings.md
 .vercel/
 .agent-native/
 data/*.lock
+
+# experiment scratch: judge batches stay local (key + outputs are summarised in results/)
+experiments/judge/
+experiments/judge_test/
+experiments/judge_run.log

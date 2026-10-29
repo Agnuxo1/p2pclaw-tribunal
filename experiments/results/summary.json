@@ -1,0 +1,288 @@
+{
+  "n_runs": 180,
+  "n_judged": 240,
+  "arms": {
+    "self_refine": {
+      "runs": 60,
+      "errors": 0,
+      "completion_rate": 1.0,
+      "mean_tokens": 10910.7,
+      "mean_seconds": 145.9,
+      "mean_calls": 4.0,
+      "overall": {
+        "mean": 3.317,
+        "n": 60,
+        "sd_across_seeds": 0.257
+      },
+      "accuracy": {
+        "mean": 3.6,
+        "n": 60,
+        "sd_across_seeds": 0.265
+      },
+      "fabrication_risk": {
+        "mean": 2.15,
+        "n": 60,
+        "sd_across_seeds": 0.05
+      },
+      "completeness": {
+        "mean": 4.767,
+        "n": 60,
+        "sd_across_seeds": 0.275
+      },
+      "reasoning": {
+        "mean": 3.6,
+        "n": 60,
+        "sd_across_seeds": 0.229
+      },
+      "clarity": {
+        "mean": 6.917,
+        "n": 60,
+        "sd_across_seeds": 0.076
+      }
+    },
+    "solo": {
+      "runs": 60,
+      "errors": 0,
+      "completion_rate": 1.0,
+      "mean_tokens": 1822.2,
+      "mean_seconds": 52.5,
+      "mean_calls": 1.0,
+      "overall": {
+        "mean": 3.533,
+        "n": 60,
+        "sd_across_seeds": 0.076
+      },
+      "accuracy": {
+        "mean": 3.85,
+        "n": 60,
+        "sd_across_seeds": 0.0
+      },
+      "fabrication_risk": {
+        "mean": 2.283,
+        "n": 60,
+        "sd_across_seeds": 0.325
+      },
+      "completeness": {
+        "mean": 4.85,
+        "n": 60,
+        "sd_across_seeds": 0.05
+      },
+      "reasoning": {
+        "mean": 3.867,
+        "n": 60,
+        "sd_across_seeds": 0.076
+      },
+      "clarity": {
+        "mean": 7.067,
+        "n": 60,
+        "sd_across_seeds": 0.076
+      }
+    },
+    "tribunal": {
+      "runs": 60,
+      "errors": 0,
+      "completion_rate": 0.983,
+      "mean_tokens": 21585.4,
+      "mean_seconds": 202.0,
+      "mean_calls": 8.0,
+      "overall": {
+        "mean": 3.2,
+        "n": 60,
+        "sd_across_seeds": 0.0
+      },
+      "accuracy": {
+        "mean": 3.267,
+        "n": 60,
+        "sd_across_seeds": 0.076
+      },
+      "fabrication_risk": {
+        "mean": 2.15,
+        "n": 60,
+        "sd_across_seeds": 0.05
+      },
+      "completeness": {
+        "mean": 4.633,
+        "n": 60,
+        "sd_across_seeds": 0.153
+      },
+      "reasoning": {
+        "mean": 3.567,
+        "n": 60,
+        "sd_across_seeds": 0.144
+      },
+      "clarity": {
+        "mean": 7.067,
+        "n": 60,
+        "sd_across_seeds": 0.029
+      },
+      "final_tribunal_verdicts": {
+        "rejected": 57,
+        "accepted": 3
+      }
+    }
+  },
+  "contrasts": {
+    "tribunal-solo:overall": {
+      "n_pairs": 60,
+      "mean_diff": -0.333,
+      "ci95": [
+        -0.633,
+        -0.05
+      ],
+      "wilcoxon_p": 0.0352
+    },
+    "tribunal-solo:accuracy": {
+      "n_pairs": 60,
+      "mean_diff": -0.583,
+      "ci95": [
+        -0.883,
+        -0.3
+      ],
+      "wilcoxon_p": 0.0005
+    },
+    "tribunal-solo:fabrication_risk": {
+      "n_pairs": 60,
+      "mean_diff": -0.133,
+      "ci95": [
+        -0.45,
+        0.167
+      ],
+      "wilcoxon_p": 0.4814
+    },
+    "tribunal-solo:completeness": {
+      "n_pairs": 60,
+      "mean_diff": -0.217,
+      "ci95": [
+        -0.533,
+        0.083
+      ],
+      "wilcoxon_p": 0.1866
+    },
+    "tribunal-solo:reasoning": {
+      "n_pairs": 60,
+      "mean_diff": -0.3,
+      "ci95": [
+        -0.583,
+        -0.017
+      ],
+      "wilcoxon_p": 0.0385
+    },
+    "tribunal-solo:clarity": {
+      "n_pairs": 60,
+      "mean_diff": 0.0,
+      "ci95": [
+        -0.2,
+        0.183
+      ],
+      "wilcoxon_p": 0.8527
+    },
+    "tribunal-self_refine:overall": {
+      "n_pairs": 60,
+      "mean_diff": -0.117,
+      "ci95": [
+        -0.433,
+        0.183
+      ],
+      "wilcoxon_p": 0.6132
+    },
+    "tribunal-self_refine:accuracy": {
+      "n_pairs": 60,
+      "mean_diff": -0.333,
+      "ci95": [
+        -0.683,
+        -0.017
+      ],
+      "wilcoxon_p": 0.0681
+    },
+    "tribunal-self_refine:fabrication_risk": {
+      "n_pairs": 60,
+      "mean_diff": 0.0,
+      "ci95": [
+        -0.267,
+        0.25
+      ],
+      "wilcoxon_p": 0.9035
+    },
+    "tribunal-self_refine:completeness": {
+      "n_pairs": 60,
+      "mean_diff": -0.133,
+      "ci95": [
+        -0.433,
+        0.167
+      ],
+      "wilcoxon_p": 0.4323
+    },
+    "tribunal-self_refine:reasoning": {
+      "n_pairs": 60,
+      "mean_diff": -0.033,
+      "ci95": [
+        -0.35,
+        0.267
+      ],
+      "wilcoxon_p": 0.7975
+    },
+    "tribunal-self_refine:clarity": {
+      "n_pairs": 60,
+      "mean_diff": 0.15,
+      "ci95": [
+        -0.1,
+        0.433
+      ],
+      "wilcoxon_p": 0.3668
+    },
+    "self_refine-solo:overall": {
+      "n_pairs": 60,
+      "mean_diff": -0.217,
+      "ci95": [
+        -0.467,
+        0.033
+      ],
+      "wilcoxon_p": 0.0766
+    },
+    "self_refine-solo:accuracy": {
+      "n_pairs": 60,
+      "mean_diff": -0.25,
+      "ci95": [
+        -0.517,
+        0.033
+      ],
+      "wilcoxon_p": 0.047
+    },
+    "self_refine-solo:fabrication_risk": {
+      "n_pairs": 60,
+      "mean_diff": -0.133,
+      "ci95": [
+        -0.4,
+        0.133
+      ],
+      "wilcoxon_p": 0.2199
+    },
+    "self_refine-solo:completeness": {
+      "n_pairs": 60,
+      "mean_diff": -0.083,
+      "ci95": [
+        -0.317,
+        0.167
+      ],
+      "wilcoxon_p": 0.4732
+    },
+    "self_refine-solo:reasoning": {
+      "n_pairs": 60,
+      "mean_diff": -0.267,
+      "ci95": [
+        -0.533,
+        0.017
+      ],
+      "wilcoxon_p": 0.0337
+    },
+    "self_refine-solo:clarity": {
+      "n_pairs": 60,
+      "mean_diff": -0.15,
+      "ci95": [
+        -0.4,
+        0.05
+      ],
+      "wilcoxon_p": 0.2906
+    }
+  }
+}
