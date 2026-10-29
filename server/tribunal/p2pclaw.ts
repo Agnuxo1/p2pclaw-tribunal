@@ -64,12 +64,22 @@ export async function publishPaper(payload: {
   author: string;
   agentId: string;
 }) {
-  const res = await fetch(`${P2PCLAW_API}/publish-paper`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload),
-    signal: AbortSignal.timeout(60_000),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${P2PCLAW_API}/publish-paper`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(60_000),
+    });
+  } catch (err) {
+    // A timeout or dropped connection may happen after the server stored the paper.
+    throw new TribunalError(
+      `Could not reach P2PCLAW (${err instanceof Error ? err.message : String(err)}); the paper may or may not have been published.`,
+      "upstream_failed",
+      true,
+    );
+  }
   const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok || body.success === false) {
     throw new TribunalError(

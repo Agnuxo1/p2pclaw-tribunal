@@ -5,6 +5,7 @@ const STATUS_STYLE: Record<string, string> = {
   accepted: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
   rejected: "bg-red-500/15 text-red-700 dark:text-red-300",
   published: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+  publishing: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
   publish_unverified: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
   final: "bg-muted text-muted-foreground",
 };
