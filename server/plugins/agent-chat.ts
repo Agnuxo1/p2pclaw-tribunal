@@ -1,11 +1,15 @@
+// SPDX-FileCopyrightText: 2026 Francisco Angulo de Lafuente
+// SPDX-License-Identifier: MIT
 import { getOrgContext } from "@agent-native/core/org";
 import {
   createAgentChatPlugin,
+  getRequestRunContext,
   loadActionsFromStaticRegistry,
 } from "@agent-native/core/server";
 
 import actionsRegistry from "../../.generated/actions-registry.js";
 import { ORCHESTRATOR_PROMPT } from "../tribunal/prompts.js";
+import { localDemoContext } from "../tribunal/local-demo-context.js";
 
 const INITIAL_TOOL_NAMES = [
   "view-screen",
@@ -28,4 +32,5 @@ export default createAgentChatPlugin({
   initialToolNames: INITIAL_TOOL_NAMES,
   resolveOrgId: async (event) => (await getOrgContext(event)).orgId,
   systemPrompt: ORCHESTRATOR_PROMPT,
+  ...localDemoContext(process.env, getRequestRunContext),
 });
