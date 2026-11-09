@@ -18,13 +18,15 @@ export interface NavigationState {
   path?: string;
   publicPath?: string;
   threadId?: string;
+  paperId?: string;
+  paperVersion?: number;
 }
 
 export function useNavigationState() {
   useAgentRouteState<NavigationState>({
     browserTabId: TAB_ID,
     requestSource: TAB_ID,
-    getNavigationState: ({ pathname }) => navigationStateForPath(pathname),
+    getNavigationState: ({ pathname, searchParams }) => navigationStateForPath(pathname, searchParams),
     getCommandPath: commandPathForNavigation,
   });
 }
@@ -62,17 +64,27 @@ function matchesPathPrefix(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(`${prefix}/`);
 }
 
-export function navigationStateForPath(pathname: string): NavigationState {
+export function navigationStateForPath(pathname: string, searchParams = new URLSearchParams()): NavigationState {
   const threadId = threadIdFromPath(pathname);
+  const paperMatch = /^\/papers\/([^/]+)$/.exec(pathname);
+  let paperId: string | undefined;
+  try { paperId = paperMatch ? decodeURIComponent(paperMatch[1]!) : undefined; } catch { /* invalid URL */ }
+  const rawVersion = searchParams.get("version") ?? "";
+  const paperVersion = /^[1-9]\d*$/.test(rawVersion) && Number.isSafeInteger(Number(rawVersion))
+    ? Number(rawVersion) : undefined;
   return {
     view: viewForPath(pathname),
     path: pathname,
     publicPath: appPathFromLocalRoute(pathname),
     ...(threadId ? { threadId } : {}),
+    ...(paperId ? { paperId } : {}),
+    ...(paperId && paperVersion ? { paperVersion } : {}),
   };
 }
 
 function viewForPath(pathname: string): string {
+  if (/^\/papers\/[^/]+$/.test(pathname)) return "paper";
+  if (pathname === "/papers") return "papers";
   if (isChatPathname(pathname)) return "chat";
   if (pathname === HOME_PATH) return "home";
   if (pathname.startsWith("/database")) return "database";
@@ -88,6 +100,9 @@ function viewForPath(pathname: string): string {
 
 function pathForView(view?: string): string {
   switch (view) {
+    case "paper":
+    case "papers":
+      return "/papers";
     case "chat":
     case "ask":
       return NEW_CHAT_PATH;
@@ -111,6 +126,11 @@ function pathForView(view?: string): string {
 }
 
 export function pathForCommand(command: any): string {
+  if (command?.view === "paper" && typeof command.paperId === "string" && command.paperId.trim()) {
+    const version = Number(command.paperVersion);
+    return `/papers/${encodeURIComponent(command.paperId.trim())}` +
+      (Number.isSafeInteger(version) && version > 0 ? `?version=${version}` : "");
+  }
   const path = pathForView(command?.view);
   if (command?.view !== "chat" && command?.view !== "ask") return path;
   const threadId =

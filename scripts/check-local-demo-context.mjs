@@ -7,7 +7,7 @@ const env = { BUILDER_LOCAL_CONTEXT_PROFILE:'1', NODE_ENV:'development',
   APP_URL:'http://127.0.0.1:10000', OPENAI_BASE_URL:'http://127.0.0.1:4040/v1',
   AGENT_ENGINE:'ai-sdk:openai', AGENT_BUILT_IN_ENGINES:'ai-sdk:openai',
   AGENT_MODEL:'p2pclaw-qwen35-27b' };
-const scope = { profile:'builder-local-synthetic-demo', revision:1 };
+const scope = { profile:'builder-local-synthetic-demo', revision:2 };
 let context = { actionScope:scope, allowedActionNames:['create-paper','save-draft','agent-teams'] };
 let reads = 0;
 const config = localDemoContext(env, () => { reads++; return context; });
@@ -25,7 +25,7 @@ assert.equal(reads, 0);
 prepared.prepareAfterModel({ model:'p2pclaw-qwen35-27b' });
 assert.equal(reads, 1);
 assert.throws(() => prepared.prepareAfterModel({ model:'other-model' }), /Invalid resolved/);
-for (const invalid of [undefined, null, [], {}, { ...scope, revision:2 }, { ...scope, extra:true }]) {
+for (const invalid of [undefined, null, [], {}, { ...scope, revision:1 }, { ...scope, extra:true }]) {
   context = { actionScope:invalid, allowedActionNames:['create-paper'] };
   assert.throws(() => prepared.prepareAfterModel({ model:'p2pclaw-qwen35-27b' }), /Invalid effective/);
 }

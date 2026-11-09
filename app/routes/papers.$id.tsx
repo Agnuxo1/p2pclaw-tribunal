@@ -1,9 +1,9 @@
 import { sendToAgentChat } from "@agent-native/core/client/agent-chat";
 import { useActionQuery } from "@agent-native/core/client/hooks";
-import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 
 import { StatusBadge } from "@/components/papers/StatusBadge";
+import { MeasurementPanel } from "@/components/papers/MeasurementPanel";
 import { Button } from "@/components/ui/button";
 import { APP_TITLE } from "@/lib/app-config";
 
@@ -39,7 +39,10 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 export default function PaperRoute() {
   const { id = "" } = useParams();
   const { data, isLoading, error } = useActionQuery("get-paper", { id });
-  const [selected, setSelected] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rawVersion = searchParams.get("version") ?? "";
+  const selected = /^[1-9]\d*$/.test(rawVersion) && Number.isSafeInteger(Number(rawVersion))
+    ? Number(rawVersion) : null;
 
   if (isLoading)
     return <p className="p-8 text-sm text-muted-foreground">Loading…</p>;
@@ -107,7 +110,11 @@ export default function PaperRoute() {
                 key={v.version}
                 size="sm"
                 variant={v.version === shown?.version ? "default" : "outline"}
-                onClick={() => setSelected(v.version)}
+                onClick={() => setSearchParams(previous => {
+                  const next = new URLSearchParams(previous);
+                  next.set("version", String(v.version));
+                  return next;
+                })}
               >
                 v{v.version}
               </Button>
@@ -131,10 +138,11 @@ export default function PaperRoute() {
             <pre className="mt-4 whitespace-pre-wrap font-sans text-sm leading-relaxed">
               {shown.body}
             </pre>
+            <MeasurementPanel key={`${paper.id}:${shown.version}`} id={paper.id} version={shown.version} />
           </>
         ) : (
           <p className="mt-6 text-sm text-muted-foreground">
-            The researcher is drafting…
+            {selected === null ? "The researcher is drafting…" : "That paper version is unavailable."}
           </p>
         )}
       </article>

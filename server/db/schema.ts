@@ -1,4 +1,5 @@
-import { integer, pgTable, real, text } from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, real, text } from "drizzle-orm/pg-core";
+import type { MeasurementProof, MeasurementRequest } from "../../shared/measurement.js";
 
 export const papers = pgTable("papers", {
   id: text("id").primaryKey(),
@@ -40,5 +41,17 @@ export const reviews = pgTable("reviews", {
   comments: text("comments").notNull(),
   reviewerThread: text("reviewer_thread"),
   counted: integer("counted"),
+  createdAt: text("created_at").notNull(),
+});
+
+export const measurementChecks = pgTable("measurement_checks", {
+  id: text("id").primaryKey(),
+  paperId: text("paper_id").notNull(),
+  version: integer("version").notNull(),
+  creatorKind: text("creator_kind").notNull(),
+  creatorThread: text("creator_thread"),
+  input: jsonb("input").$type<MeasurementRequest>().notNull(),
+  proof: jsonb("proof").$type<MeasurementProof>().notNull(),
+  inputHash: text("input_hash").notNull(),
   createdAt: text("created_at").notNull(),
 });

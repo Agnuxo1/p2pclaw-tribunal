@@ -7,7 +7,8 @@
     "failOnBuild": false,
     "dbToolScopingDenylist": {
       "paper_versions": "child rows of papers; read and written only through actions that check paper ownership",
-      "reviews": "child rows of papers; read and written only through actions that check paper ownership and reviewer independence"
+      "reviews": "child rows of papers; read and written only through actions that check paper ownership and reviewer independence",
+      "measurement_checks": "child rows of paper versions; only domain actions check parent ownership and hide peers' current-round checks; no direct raw DB tool access"
     }
   }
 }

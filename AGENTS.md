@@ -31,3 +31,29 @@ Use `adding-a-feature` for functional parity and `frontend-design` for a user-fa
 Before building common workspace or agent UI, read `agent-native-toolkit`; for supported customization, read `customizing-agent-native`.
 
 - Guarded verification: run `pnpm agent-native:doctor`; fix findings before done.
+
+## Numeric claims in paper drafts
+
+Use the paper detail panel or the same authenticated actions. `check-measurement`
+takes `id`, an existing `version`, and `measurement` with `sourceStudyId`
+equal to that id, `operation`, `claimedValue` and explicit typed `inputs`.
+Operations: distance (pixels, spacing_mm_per_pixel), area (pixel_area,
+spacing_mm_per_pixel; isotropic pixels), reduction (before, after), weighted_mean
+(a, n_a, b, n_b). Units are mm, mm², %, or the common input units respectively.
+Missing inputs must be null; do not infer calibration, units or sample counts.
+
+Read back the saved id and proof through `get-measurement-checks` (up to 50
+recent checks per owned version). Preserve status, exactFraction, formula, units,
+absoluteTolerance and missingInputs. Incomplete means the completeness policy
+prevented calculation, including algebraically identifiable special cases.
+Matches/differs compares caller-supplied numbers at absolute tolerance 0.00001;
+it is not source extraction, authentication or a scientific verdict.
+
+The navigation views `papers` and `paper` expose selected `paperId` and
+`paperVersion` (URL query `version`). `navigate` supports view paper with
+paperId and optional paperVersion. `view-screen` reads paper status and checks
+for the selected version, or the current version when no selection is present.
+Frontend users see all their checks; while a tribunal round
+is open each agent sees only its own thread's current-version checks. Do not
+copy one reviewer's checks to another. Existing review/scoring/publish rules
+remain authoritative. After a write verify the saved check via the read action.
