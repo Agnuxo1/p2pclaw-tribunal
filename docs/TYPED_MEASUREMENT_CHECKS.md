@@ -52,3 +52,19 @@ separately before describing this feature as deployed. The existing local
 synthetic profile is opt-in and now uses request scope revision 2; old deployed
 revision-1 evidence remains separate. No model weights or competition datasets
 are included.
+
+## Local preview dependency resolution
+
+The development Vite configuration pins assistant UI modules to the app's own
+installed dependency graph and prebundles the nested CommonJS JSON parser. The
+original baseline also failed to hydrate when its optimized module graph resolved
+that parser through a different preview folder. Explicit prebundling alone did
+not fix it; the scoped graph plus prebundling rendered both the baseline and
+feature previews. This changes development resolution, preserving SDK versions
+and the production build resolver.
+
+Three new synthetic browser checks were saved and read back through authenticated
+HTTP: 125 pixels at 0.08 mm/pixel gives a matching 10 mm; missing calibration stays
+incomplete; before 80 and after 60 differs from the claimed 30%, computing 25%.
+These verify the software workflow, not model quality or scientific findings.
+Chat overlap/cancellation and a real-model recording are tracked separately.
