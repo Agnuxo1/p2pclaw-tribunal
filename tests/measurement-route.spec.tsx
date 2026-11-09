@@ -37,4 +37,3 @@ it("resets numeric form state when moving between cached same-version papers", a
     expect([...node.querySelectorAll("button")].find(x => x.textContent === "Distance")?.getAttribute("aria-pressed")).toBe("true");
   } finally { await act(async () => root.unmount()); node.remove(); }
 });
-

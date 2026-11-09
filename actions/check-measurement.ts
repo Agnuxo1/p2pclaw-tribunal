@@ -19,4 +19,3 @@ export default defineAction({
     checkMeasurement(requireUserEmail(ctx?.userEmail), id, version, measurement,
       { frontend: ctx?.caller === "frontend", threadId: ctx?.threadId })),
 });
-

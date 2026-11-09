@@ -52,4 +52,3 @@ separately before describing this feature as deployed. The existing local
 synthetic profile is opt-in and now uses request scope revision 2; old deployed
 revision-1 evidence remains separate. No model weights or competition datasets
 are included.
-

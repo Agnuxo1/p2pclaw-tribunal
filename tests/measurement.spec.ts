@@ -43,4 +43,3 @@ describe("bounded exact numeric checks", () => {
     expect(() => calculateMeasurement("paper", { sourceStudyId: "paper", operation: "weighted_mean", claimedValue: 1, inputs: { a: 1, n_a: 0.5, b: 1, n_b: 1 } })).toThrow();
   });
 });
-

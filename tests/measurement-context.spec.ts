@@ -16,4 +16,3 @@ it("fresh screen follows the selected older paper version", async () => {
   const screen = await viewScreen.run({}, { userEmail: "owner@example.invalid", caller: "agent", threadId: "A" } as any) as any;
   expect(screen.measurements.version).toBe(1);
 });
-

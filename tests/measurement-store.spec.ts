@@ -78,4 +78,3 @@ describe("measurement SQL ownership, provenance and review blindness", () => {
     expect((await getMeasurementChecks(owner, "p", 1, { frontend: false, threadId: "A" })).checks).toHaveLength(1);
   });
 });
-

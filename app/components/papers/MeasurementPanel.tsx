@@ -97,4 +97,3 @@ export function MeasurementPanel({ id, version }: { id: string; version: number 
     </section>
   );
 }
-

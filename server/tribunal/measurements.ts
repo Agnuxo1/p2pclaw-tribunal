@@ -57,4 +57,3 @@ export async function getMeasurementChecks(email: string, id: string, version: n
   return { checks: rows.map(publicRow),
     visibility: blind ? "own-thread" as const : "owner" as const };
 }
-

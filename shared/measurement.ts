@@ -108,4 +108,3 @@ export function normalizedMeasurement(request: MeasurementRequest): unknown {
     claimedValue: format(request.claimedValue),
     inputs: Object.fromEntries(Object.entries(request.inputs).map(([key, value]) => [key, format(value)])) };
 }
-
