@@ -1,8 +1,7 @@
 import { runMigrations } from "@agent-native/core/db";
 
 // Every migration carries a stable `name` slug; append, never edit an applied entry.
-export const runTribunalMigrations = runMigrations(
-  [
+export const TRIBUNAL_MIGRATIONS = [
     {
       version: 1,
       name: "create-papers",
@@ -80,7 +79,26 @@ export const runTribunalMigrations = runMigrations(
   CREATE UNIQUE INDEX IF NOT EXISTS uq_counted_reviews_lens ON reviews (paper_id, version, lens) WHERE counted = 1;
   CREATE UNIQUE INDEX IF NOT EXISTS uq_counted_reviews_thread ON reviews (paper_id, version, reviewer_thread) WHERE counted = 1`,
     },
-  ],
+    {
+      version: 8,
+      name: "typed-measurement-checks-v1",
+      sql: `CREATE TABLE IF NOT EXISTS measurement_checks (
+    id TEXT PRIMARY KEY,
+    paper_id TEXT NOT NULL,
+    version INTEGER NOT NULL CHECK (version > 0),
+    creator_kind TEXT NOT NULL CHECK (creator_kind IN ('frontend', 'agent')),
+    creator_thread TEXT,
+    input JSONB NOT NULL,
+    proof JSONB NOT NULL,
+    input_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (paper_id, version) REFERENCES paper_versions(paper_id, version)
+  );
+  CREATE INDEX IF NOT EXISTS idx_measurement_checks_paper_version ON measurement_checks (paper_id, version, created_at DESC, id DESC);`,
+    },
+  ];
+export const runTribunalMigrations = runMigrations(
+  TRIBUNAL_MIGRATIONS,
   { table: "tribunal_migrations" },
 );
 

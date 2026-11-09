@@ -18,6 +18,8 @@ const INITIAL_TOOL_NAMES = [
   "create-paper",
   "save-draft",
   "get-paper",
+  "check-measurement",
+  "get-measurement-checks",
   "submit-review",
   "tribunal-verdict",
   "list-papers",

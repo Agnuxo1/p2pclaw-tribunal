@@ -4,6 +4,7 @@
 export const LOCAL_DEMO_ACTIONS = [
   "view-screen", "navigate", "create-paper", "save-draft", "get-paper",
   "submit-review", "tribunal-verdict", "list-papers", "agent-teams", "tool-search",
+  "check-measurement", "get-measurement-checks",
 ] as const;
 
 export function localDemoContext(
@@ -33,7 +34,7 @@ export function localDemoContext(
       allowedActionNames: [...new Set(availableActionNames.filter(name => allowed.has(name)))],
       // A bounded request-scope marker prevents dev mode from re-adding shell/DB tools.
       // This narrows the registry; it neither grants rights nor replaces user authorization.
-      actionScope: { profile: "builder-local-synthetic-demo", revision: 1 },
+      actionScope: { profile: "builder-local-synthetic-demo", revision: 2 },
     }),
     // Core has consumed the HTTP body by prepareRequest. Validate its effective
     // request-scoped surface later, after resolution and before model dispatch.
@@ -45,7 +46,7 @@ export function localDemoContext(
         if (!scope || typeof scope !== "object" || Array.isArray(scope) ||
             Object.keys(scope).length !== 2 ||
             (scope as Record<string, unknown>).profile !== "builder-local-synthetic-demo" ||
-            (scope as Record<string, unknown>).revision !== 1) {
+            (scope as Record<string, unknown>).revision !== 2) {
           throw new Error("Invalid effective local demo scope");
         }
         const names = context?.allowedActionNames;

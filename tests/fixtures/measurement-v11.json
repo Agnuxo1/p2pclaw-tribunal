@@ -1,0 +1,326 @@
+[
+  {
+    "study_id": "STUDY_EXSKLEAUWGCXMG",
+    "request": {
+      "study_id": "STUDY_EXSKLEAUWGCXMG",
+      "operation": "distance",
+      "inputs": {
+        "pixels": 39,
+        "spacing_mm_per_pixel": "0.12"
+      }
+    },
+    "gold_from_independent_decimal": 4.68,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_XPRLWZBDCUSZUK",
+    "request": {
+      "study_id": "STUDY_XPRLWZBDCUSZUK",
+      "operation": "distance",
+      "inputs": {
+        "pixels": 163,
+        "spacing_mm_per_pixel": "0.13"
+      }
+    },
+    "gold_from_independent_decimal": 21.19,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_PHATQEAQGZGDJA",
+    "request": {
+      "study_id": "STUDY_PHATQEAQGZGDJA",
+      "operation": "distance",
+      "inputs": {
+        "pixels": 228,
+        "spacing_mm_per_pixel": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_ERARDCVHJLDCNH",
+    "request": {
+      "study_id": "STUDY_ERARDCVHJLDCNH",
+      "operation": "distance",
+      "inputs": {
+        "pixels": 113,
+        "spacing_mm_per_pixel": "0.24"
+      }
+    },
+    "gold_from_independent_decimal": 27.12,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_BTKEBZUXZHAWWS",
+    "request": {
+      "study_id": "STUDY_BTKEBZUXZHAWWS",
+      "operation": "distance",
+      "inputs": {
+        "pixels": 65,
+        "spacing_mm_per_pixel": "0.04"
+      }
+    },
+    "gold_from_independent_decimal": 2.6,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_JPPMWZUGCXVZAM",
+    "request": {
+      "study_id": "STUDY_JPPMWZUGCXVZAM",
+      "operation": "distance",
+      "inputs": {
+        "pixels": 181,
+        "spacing_mm_per_pixel": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_XHQBMFBQXGELCN",
+    "request": {
+      "study_id": "STUDY_XHQBMFBQXGELCN",
+      "operation": "area",
+      "inputs": {
+        "pixel_area": 1394,
+        "spacing_mm_per_pixel": "0.09"
+      }
+    },
+    "gold_from_independent_decimal": 11.2914,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_PGEVSUKERTDZSS",
+    "request": {
+      "study_id": "STUDY_PGEVSUKERTDZSS",
+      "operation": "area",
+      "inputs": {
+        "pixel_area": 820,
+        "spacing_mm_per_pixel": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_SZXUWNPXQNCPNW",
+    "request": {
+      "study_id": "STUDY_SZXUWNPXQNCPNW",
+      "operation": "area",
+      "inputs": {
+        "pixel_area": 1385,
+        "spacing_mm_per_pixel": "0.24"
+      }
+    },
+    "gold_from_independent_decimal": 79.776,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_TTSUNQWKCYSTCY",
+    "request": {
+      "study_id": "STUDY_TTSUNQWKCYSTCY",
+      "operation": "area",
+      "inputs": {
+        "pixel_area": 1348,
+        "spacing_mm_per_pixel": "0.14"
+      }
+    },
+    "gold_from_independent_decimal": 26.4208,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_JPWLSQLQRDYGJE",
+    "request": {
+      "study_id": "STUDY_JPWLSQLQRDYGJE",
+      "operation": "area",
+      "inputs": {
+        "pixel_area": 1175,
+        "spacing_mm_per_pixel": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_ENZYRACSBKLNUW",
+    "request": {
+      "study_id": "STUDY_ENZYRACSBKLNUW",
+      "operation": "area",
+      "inputs": {
+        "pixel_area": 1024,
+        "spacing_mm_per_pixel": "0.24"
+      }
+    },
+    "gold_from_independent_decimal": 58.9824,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_BCRYEFEJXCQGTT",
+    "request": {
+      "study_id": "STUDY_BCRYEFEJXCQGTT",
+      "operation": "reduction",
+      "inputs": {
+        "before": 179,
+        "after": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_EBJZEAFXYRXAEA",
+    "request": {
+      "study_id": "STUDY_EBJZEAFXYRXAEA",
+      "operation": "reduction",
+      "inputs": {
+        "before": 103,
+        "after": 58
+      }
+    },
+    "gold_from_independent_decimal": 43.689320388349515,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_ALHKQNQJQCSEEH",
+    "request": {
+      "study_id": "STUDY_ALHKQNQJQCSEEH",
+      "operation": "reduction",
+      "inputs": {
+        "before": 237,
+        "after": 30
+      }
+    },
+    "gold_from_independent_decimal": 87.34177215189874,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_QHCCAMQWPKUXBJ",
+    "request": {
+      "study_id": "STUDY_QHCCAMQWPKUXBJ",
+      "operation": "reduction",
+      "inputs": {
+        "before": 189,
+        "after": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_ZLCTYQXEDPXGNP",
+    "request": {
+      "study_id": "STUDY_ZLCTYQXEDPXGNP",
+      "operation": "reduction",
+      "inputs": {
+        "before": 154,
+        "after": 70
+      }
+    },
+    "gold_from_independent_decimal": 54.54545454545455,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_SWCYCNMCPUFYGW",
+    "request": {
+      "study_id": "STUDY_SWCYCNMCPUFYGW",
+      "operation": "reduction",
+      "inputs": {
+        "before": 198,
+        "after": 57
+      }
+    },
+    "gold_from_independent_decimal": 71.21212121212122,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_CLMJCEKGTTUXGB",
+    "request": {
+      "study_id": "STUDY_CLMJCEKGTTUXGB",
+      "operation": "weighted_mean",
+      "inputs": {
+        "a": 5,
+        "n_a": 7,
+        "b": 23,
+        "n_b": 41
+      }
+    },
+    "gold_from_independent_decimal": 20.375,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_QJHYZKANRZEYJU",
+    "request": {
+      "study_id": "STUDY_QJHYZKANRZEYJU",
+      "operation": "weighted_mean",
+      "inputs": {
+        "a": 9,
+        "n_a": 15,
+        "b": 38,
+        "n_b": 46
+      }
+    },
+    "gold_from_independent_decimal": 30.868852459016395,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_RGMBSAWGRPLJQJ",
+    "request": {
+      "study_id": "STUDY_RGMBSAWGRPLJQJ",
+      "operation": "weighted_mean",
+      "inputs": {
+        "a": 11,
+        "n_a": 11,
+        "b": 36,
+        "n_b": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  },
+  {
+    "study_id": "STUDY_CRTERRYKQJRYZG",
+    "request": {
+      "study_id": "STUDY_CRTERRYKQJRYZG",
+      "operation": "weighted_mean",
+      "inputs": {
+        "a": 11,
+        "n_a": 14,
+        "b": 39,
+        "n_b": 23
+      }
+    },
+    "gold_from_independent_decimal": 28.405405405405407,
+    "expected_label": "supported"
+  },
+  {
+    "study_id": "STUDY_YDHLEREYFXHSQE",
+    "request": {
+      "study_id": "STUDY_YDHLEREYFXHSQE",
+      "operation": "weighted_mean",
+      "inputs": {
+        "a": 6,
+        "n_a": 15,
+        "b": 37,
+        "n_b": 36
+      }
+    },
+    "gold_from_independent_decimal": 27.88235294117647,
+    "expected_label": "error"
+  },
+  {
+    "study_id": "STUDY_ZXXJLEWAEFHLJB",
+    "request": {
+      "study_id": "STUDY_ZXXJLEWAEFHLJB",
+      "operation": "weighted_mean",
+      "inputs": {
+        "a": 12,
+        "n_a": 9,
+        "b": 24,
+        "n_b": null
+      }
+    },
+    "gold_from_independent_decimal": null,
+    "expected_label": "insufficient"
+  }
+]
