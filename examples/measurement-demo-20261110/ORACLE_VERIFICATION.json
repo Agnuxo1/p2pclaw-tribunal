@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "case": "area",
+      "status": "matches",
+      "exactFraction": "36"
+    },
+    {
+      "case": "weighted",
+      "status": "differs",
+      "exactFraction": "119/20"
+    },
+    {
+      "case": "missing",
+      "status": "incomplete",
+      "exactFraction": null
+    }
+  ],
+  "scope": "Three synthetic arithmetic controls, no scientific efficacy claim"
+}

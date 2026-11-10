@@ -1,0 +1,14 @@
+{
+  "area": {
+    "status": "matches",
+    "exactFraction": "36/1"
+  },
+  "weighted": {
+    "status": "differs",
+    "exactFraction": "119/20"
+  },
+  "missing": {
+    "status": "incomplete",
+    "exactFraction": null
+  }
+}

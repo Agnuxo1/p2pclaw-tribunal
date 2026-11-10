@@ -1,0 +1,93 @@
+{
+  "source_commit": "482f1ff86fd7338abbd5745f9e96d664692e4921",
+  "paper_id": "paper_mwa34ib91tgr2v",
+  "version": 1,
+  "mode": "solo",
+  "actor": "Current Codex external agent via stock framework CLI",
+  "synthetic": true,
+  "in_app_model_generation": false,
+  "independent_peer_review": false,
+  "checks": {
+    "area": {
+      "id": "measurement_d0f9b6538cd2e311687c1f88116bc087620cd97045377cea08a375e710fd8b00",
+      "paperId": "paper_mwa34ib91tgr2v",
+      "version": 1,
+      "input": {
+        "sourceStudyId": "paper_mwa34ib91tgr2v",
+        "claimedValue": "36",
+        "operation": "area",
+        "inputs": {
+          "pixel_area": "900",
+          "spacing_mm_per_pixel": "0.2"
+        }
+      },
+      "proof": {
+        "status": "matches",
+        "value": 36,
+        "exactFraction": "36",
+        "units": "mm\u00b2",
+        "formula": "pixel_area \u00d7 spacing_mm_per_pixel\u00b2 (isotropic pixels)",
+        "missingInputs": [],
+        "absoluteTolerance": 1e-05
+      },
+      "inputHash": "c371b560c97310c0be0fdecac8bf73d53bbffc64596cce63ccbf7ad746193379",
+      "createdAt": "2026-11-10T02:43:38.602Z"
+    },
+    "weighted": {
+      "id": "measurement_9aa476f146bb91c905ecc9b6ad04ed66d6b0d63e6e5f0e9528fc53e2d9b0e33c",
+      "paperId": "paper_mwa34ib91tgr2v",
+      "version": 1,
+      "input": {
+        "sourceStudyId": "paper_mwa34ib91tgr2v",
+        "claimedValue": "6.05",
+        "operation": "weighted_mean",
+        "inputs": {
+          "a": "4",
+          "n_a": "7",
+          "b": "7",
+          "n_b": "13"
+        }
+      },
+      "proof": {
+        "status": "differs",
+        "value": 5.95,
+        "exactFraction": "119/20",
+        "units": "input units",
+        "formula": "(a \u00d7 n_a + b \u00d7 n_b) / (n_a + n_b)",
+        "missingInputs": [],
+        "absoluteTolerance": 1e-05
+      },
+      "inputHash": "9bd3ae25b623ee6f0753dcb69bcde1aea36ff205f001bc809910f544ecf93999",
+      "createdAt": "2026-11-10T02:43:40.921Z"
+    },
+    "missing": {
+      "id": "measurement_e9d9eea1256a64d13338d98a0cec80b885cbeba3b3594fc9bf7771f6cf22f15e",
+      "paperId": "paper_mwa34ib91tgr2v",
+      "version": 1,
+      "input": {
+        "sourceStudyId": "paper_mwa34ib91tgr2v",
+        "claimedValue": "5.95",
+        "operation": "weighted_mean",
+        "inputs": {
+          "a": "4",
+          "n_a": "7",
+          "b": "7",
+          "n_b": null
+        }
+      },
+      "proof": {
+        "status": "incomplete",
+        "value": null,
+        "exactFraction": null,
+        "units": "input units",
+        "formula": "(a \u00d7 n_a + b \u00d7 n_b) / (n_a + n_b)",
+        "missingInputs": [
+          "n_b"
+        ],
+        "absoluteTolerance": 1e-05
+      },
+      "inputHash": "9543874d14214a377f5b25b87af68cb3698e55f6faff617f1dfd1cd392a3c6c7",
+      "createdAt": "2026-11-10T02:43:43.074Z"
+    }
+  }
+}

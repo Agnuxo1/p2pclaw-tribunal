@@ -1,0 +1,110 @@
+[
+  {
+    "title": "Research you can inspect",
+    "tag": "P2PCLAW TRIBUNAL",
+    "label": "A shared workspace for agents and people",
+    "lines": [
+      "Drafts stay versioned.",
+      "Numeric claims stay inspectable.",
+      "People keep the final judgment."
+    ],
+    "narration": "An agent can write a persuasive research note. Can you inspect the numbers behind it? P2PCLAW Tribunal keeps drafts, numeric checks and decisions together. This edited demo uses real application captures and invented inputs. Codex is the external agent; it uses the framework's standard command line, rather than an in-app chat model.",
+    "image": null
+  },
+  {
+    "title": "One real, saved document",
+    "tag": "01 / AGENT TO APPLICATION",
+    "label": "Current Codex → shared actions → paper v1",
+    "lines": [
+      "Created and saved by Codex.",
+      "The browser opens the same record.",
+      "Solo mode: no peer review claimed."
+    ],
+    "narration": "The current Codex agent created a solo paper, saved version one, and invoked three typed measurement checks. The browser now opens that exact persisted document. The fixture declares its synthetic inputs and its deliberately injected error. No independent reviewer or scientific result is claimed here.",
+    "image": "01-agent-paper.png",
+    "crop": [
+      515,
+      90,
+      1310,
+      820
+    ]
+  },
+  {
+    "title": "A correct calculation",
+    "tag": "02 / POSITIVE CONTROL",
+    "label": "900 × 0.2² = 36 mm²",
+    "lines": [
+      "Area requires squared calibration.",
+      "The exact result matches the claim.",
+      "Inputs and paper version are saved."
+    ],
+    "narration": "First, a positive control. Nine hundred square pixels, calibrated at zero point two millimetres per pixel, gives thirty-six square millimetres. The application squares the calibration, computes an exact result, and saves a match with the formula, units and paper version.",
+    "image": "07-area-match.png",
+    "crop": [
+      515,
+      120,
+      1310,
+      785
+    ]
+  },
+  {
+    "title": "Make the error visible",
+    "tag": "03 / FAULT INJECTION",
+    "label": "6.05 claimed · 119/20 computed",
+    "lines": [
+      "Means 4 and 7; counts 7 and 13.",
+      "Exact weighted mean: 5.95.",
+      "The app records “differs”."
+    ],
+    "narration": "Next, a deliberate error. Group means are four and seven, with counts seven and thirteen. The note claims six point zero five. The shared action returns one hundred and nineteen over twenty, or five point nine five, and records differs. The original inputs remain visible so the discrepancy can be inspected.",
+    "image": "04-source-binding.png",
+    "crop": [
+      515,
+      84,
+      1310,
+      770
+    ]
+  },
+  {
+    "title": "Missing stays missing",
+    "tag": "04 / COMPLETENESS CONTROL",
+    "label": "No group count → no fabricated answer",
+    "lines": [
+      "The second count is left blank.",
+      "It is stored as null.",
+      "The result remains incomplete."
+    ],
+    "narration": "The third case omits a group count. The application keeps that input null and reports incomplete. It does not borrow a count from a neighbouring example. An incomplete result is useful: it tells a person exactly what evidence is still needed before checking the claim.",
+    "image": "06-incomplete-proof.png",
+    "crop": [
+      515,
+      60,
+      1310,
+      780
+    ]
+  },
+  {
+    "title": "A narrow, testable promise",
+    "tag": "05 / SCOPE AND EVIDENCE",
+    "label": "Exact arithmetic ≠ scientific truth",
+    "lines": [
+      "Three controls matched a Fraction oracle.",
+      "Checks bind to a paper and version.",
+      "They do not authenticate source data."
+    ],
+    "narration": "All three prospective controls matched a separate Python Fraction calculation and were read back from the application. The interface saved the same outcomes on the same paper. These are software workflow checks. They do not authenticate measurements, establish a scientific conclusion, or demonstrate that agent peer review improves quality.",
+    "image": null
+  },
+  {
+    "title": "Keep the evidence with the work",
+    "tag": "P2PCLAW TRIBUNAL / OPEN SOURCE",
+    "label": "Inspect the draft. Inspect the calculation. Decide.",
+    "lines": [
+      "Built on Builder Agent-Native.",
+      "Event additions and prior work disclosed.",
+      "Source, inputs and limited results included."
+    ],
+    "narration": "P2PCLAW Tribunal is built on Builder Agent-Native, with the framework's shared actions and versioned application data. The repository discloses prior work, event additions, third-party licenses and limited results. The goal is practical: make agent work easier to inspect, so a person can make a better informed decision.",
+    "image": null
+  }
+]

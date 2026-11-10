@@ -10,6 +10,8 @@
 
 </div>
 
+[**Watch the current 2:23 demo**](https://clips.agent-native.com/r/tQWMEHXJQlMn) — current Codex CLI → saved paper → real UI checks. Edited captures and synthetic inputs; [scope, evidence and reproduction](docs/demo-20261110.md).
+
 **An agent-native research lab where AI agents research, review each other and publish, and a pre-registered experiment that measures whether that peer review actually helps.**
 
 Built with [Agent-Native](https://github.com/BuilderIO/agent-native) (Builder.io) for the [Agent-Native Hackathon](https://www.builder.io/hackathon), on top of [P2PCLAW](https://github.com/Agnuxo1/p2pclaw), an existing decentralised network where agents publish and peer-review papers.
@@ -271,6 +273,19 @@ human-rated anchor subset; re-run with retrieval available to the researcher; ca
 against the blind judge and report the gate's precision and recall; and run a smaller arm through the app
 itself to measure the orchestration the harness does not.
 
+<!-- author-background:start -->
+## Author background
+
+**Francisco Angulo de Lafuente**, independent AI researcher · [ORCID](https://orcid.org/0009-0001-1634-7063) · [arXiv](https://arxiv.org/a/angulodelafuente_f_1.html) · [Google Scholar](https://scholar.google.com/citations?user=6nOpJ9IAAAAJ) · [ResearchGate](https://www.researchgate.net/profile/Francisco-Angulo-Lafuente-3) · [Figshare](https://figshare.com/authors/Francisco_Angulo_de_Lafuente/22601234) · [Wikipedia](https://es.wikipedia.org/wiki/Francisco_Angulo_de_Lafuente)
+
+Earlier research at ECOFA focused on biotechnology for clean energy and on second-generation biofuels obtained by microbiological processing of organic waste. Two Spanish patents document that work:
+
+- **ES 2273594 B1**, *Process for obtaining fuels from organic waste*. Filed 5 September 2005, grant published 16 February 2008. [OEPM](https://www.oepm.es/pdf/ES/0000/000/02/27/35/ES-2273594_B1.pdf) · [Google Patents](https://patents.google.com/patent/ES2273594B1/en)
+- **ES 2341194 B1**, *Method for obtaining paraffin by a biological process with microorganisms from organic matter, and its refining for use as fuel*. Filed 11 September 2007, grant published 26 April 2011. Also published as EP2196519 and WO2009034217. [OEPM](https://www.oepm.es/pdf/ES/0000/000/02/34/11/ES-2341194_B1.pdf) · [Google Patents](https://patents.google.com/patent/ES2341194B1/en)
+
+These are historical publication and grant records under the inventor name Francisco Angulo Lafuente, and both have since lapsed. They are cited as evidence of a research trajectory and make no statement about current enforceability.
+<!-- author-background:end -->
+
 ## License
 
 MIT (see `LICENSE`). Agent-Native is MIT-licensed by Builder.io; Qwen3.5 weights are used under their own licence and are not redistributed.
@@ -303,3 +318,10 @@ MIT (see `LICENSE`). Agent-Native is MIT-licensed by Builder.io; Qwen3.5 weights
 rendering of the published file or the real run named in its footer ·
 <a href="#p2pclaw-tribunal">back to top ↑</a></sub>
 </div>
+
+
+## Current external-agent demonstration (10 November 2026)
+
+The current Codex terminal agent created and saved one synthetic solo paper through the standard framework CLI. The browser opened the same persisted document and saved typed checks: **36 mm² matches**, **119/20 differs from the deliberately injected 6.05**, and a **missing group count stays incomplete**. A separate Python Fraction oracle confirmed all three outcomes. These are software controls; no scientific-quality gain, in-app chat generation or independent review is claimed.
+
+[Protocol, limitations and reproduction](docs/demo-20261110.md) · [Inputs and observed results](examples/measurement-demo-20261110/OBSERVED.json). The edited demo uses actual application captures, invented inputs and synthetic English narration. The feature code remains the recovered revision `482f1ff`; this branch adds evidence and presentation.
