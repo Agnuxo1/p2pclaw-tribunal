@@ -1,0 +1,25 @@
+{
+  "contest": "Builder Agent-Native",
+  "project": "P2PCLAW Tribunal",
+  "status": "RECEIVED",
+  "visible_confirmation": "Thank you for submitting. Your project submission has been received.",
+  "observed_utc": "2026-11-10T04:51:12.256334+00:00",
+  "url": "https://www.builder.io/hackathon/submit",
+  "platform_id": null,
+  "platform_id_note": "No unique entry ID displayed; receipt is visible platform confirmation, timestamp and captured hashes.",
+  "submit_clicks": 1,
+  "source_commit": "479a509dabaafa7c0cfb71e570342f3653250aa0",
+  "clips_url": "https://clips.agent-native.com/r/tQWMEHXJQlMn",
+  "marketing": false,
+  "jury_outcome": null,
+  "score": null,
+  "rank": null,
+  "human_creator": "Francisco Angulo de Lafuente",
+  "orcid": "0009-0001-1634-7063",
+  "evidence": {
+    "official-receipt/BUILDER_RECEIPT.png": {
+      "bytes": 71832,
+      "sha256": "b398815305071984e6ee30a5f3aaf9339c8e186c580f5c34c41df6b35fa0041a"
+    }
+  }
+}

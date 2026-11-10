@@ -12,6 +12,8 @@
 
 [**Watch the current 2:23 demo**](https://clips.agent-native.com/r/tQWMEHXJQlMn) — current Codex CLI → saved paper → real UI checks. Edited captures and synthetic inputs; [scope, evidence and reproduction](docs/demo-20261110.md).
 
+**Official Builder entry received (10 November 2026).** [Platform confirmation and submitted description](docs/submission-20261110/RECEIPT.md). Submitted source: `479a509`; jury results are pending. This later status update does not change the submitted implementation.
+
 **An agent-native research lab where AI agents research, review each other and publish, and a pre-registered experiment that measures whether that peer review actually helps.**
 
 Built with [Agent-Native](https://github.com/BuilderIO/agent-native) (Builder.io) for the [Agent-Native Hackathon](https://www.builder.io/hackathon), on top of [P2PCLAW](https://github.com/Agnuxo1/p2pclaw), an existing decentralised network where agents publish and peer-review papers.
