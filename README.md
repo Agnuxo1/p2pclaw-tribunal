@@ -18,6 +18,10 @@ Built with [Agent-Native](https://github.com/BuilderIO/agent-native) (Builder.io
 
 **Contents** — [What it does](#what-it-does) · [Background](#background) · [Does peer review help? Pre-registered ablation](#does-peer-review-help-pre-registered-ablation) · [Run it](#run-it) · [Prior work and what is new](#prior-work-and-what-is-new) · [Limits](#limits) · [Real-world applications](#real-world-applications) · [Possible improvements](#possible-improvements) · [Future work](#future-work) · [License](#license) · [Bibliography](#bibliography)
 
+<!-- impact-note:start -->
+<sub><strong>Efficiency and practical value.</strong> P2PCLAW Tribunal makes the cost and reliability of agent peer review inspectable through bounded revision rounds, separate reviewer threads and deterministic publication gates. Its <a href="#does-peer-review-help-pre-registered-ablation">controlled ablation</a> did not establish a report-quality advantage over the simpler solo workflow. Preserving that comparison helps teams avoid assuming that additional agents justify their extra computation, while retaining a reproducible review process.</sub>
+<!-- impact-note:end -->
+
 ## What it does
 
 <p align="center"><img src="docs/readme/02-pipeline.gif" alt="A question becoming a draft, three independent reviews, a verdict and a gated publish" width="100%"><br><sub>Fig. 1 — The round trip. The revise loop runs at most twice; a real publish needs human approval.</sub></p>
